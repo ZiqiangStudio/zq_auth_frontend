@@ -12,13 +12,13 @@
       <div class="form-item">
         <div class="label-container">
           <label>密码</label>
-          <a href="find"><strong>忘记密码？</strong></a>
+          <nuxt-link to="find"><strong>忘记密码？</strong></nuxt-link>
         </div>
         <input v-model="password" type="password" placeholder="请输入密码" />
       </div>
       <button>登录</button>
     </form>
-    <p class="action">还没有账号？<a href="/register"><strong>立即注册</strong></a></p>
+    <p class="action">还没有账号？<nuxt-link to="/register"><strong>立即注册</strong></nuxt-link></p>
   </div>
 </template>
 <script lang="ts" setup>
@@ -47,37 +47,7 @@ function submit(e: Event) {
   }
 }
 
-strong,
-a {
-  color: var(--color-primary);
-}
-
-a {
-  text-decoration: none;
-}
-
 .form-item {
-  label,
-  input {
-    width: 100%;
-    display: block;
-    box-sizing: border-box;
-  }
-
-  label {
-    font-size: 13px;
-    margin-bottom: 4px;
-    font-weight: bold;
-  }
-
-  input {
-    padding: 12px 0 12px 42px;
-    border: none;
-    border-radius: var(--border-radius-m);
-    font-size: 15px;
-    background-color: var(--color-input-bg);
-  }
-
   .label-container {
     display: flex;
     align-items: center;
@@ -91,17 +61,6 @@ form {
   display: flex;
   flex-direction: column;
   gap: 12px;
-}
-
-button {
-  margin-top: 38px;
-  width: 100%;
-  border: none;
-  border-radius: var(--border-radius-m);
-  background-color: var(--color-primary);
-  font-size: 18px;
-  padding: 8px 0;
-  color: #FFFFFF;
 }
 
 .action {

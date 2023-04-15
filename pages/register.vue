@@ -1,32 +1,48 @@
 <template>
   <div class="container">
     <header>
+      <app-header app-logo="" />
       <h1>使用<strong>自强 Studio 账号</strong>登录</h1>
       <p class="notice">使用同一个账号来登录所有的自强产品，从此无需重复输入个人信息</p>
     </header>
     <form @submit="submit">
       <div class="form-item">
         <label>用户名</label>
-        <input v-model="username" placeholder="请输入用户名" />
+        <div class="input-container">
+          <input v-model="username" placeholder="请输入用户名" />
+          <img src="/icon/user.svg" />
+        </div>
       </div>
       <div class="form-item">
         <label>手机号</label>
-        <input v-model="phone" placeholder="请输入手机号" />
+        <div class="input-container">
+          <input v-model="phone" placeholder="请输入手机号" />
+          <img src="/icon/phone.svg" />
+        </div>
       </div>
       <div class="form-item">
         <label>验证码</label>
         <div class="sms-container">
-          <input v-model="sms" placeholder="请输入验证码" />
+          <div class="input-container">
+            <input v-model="sms" placeholder="请输入验证码" />
+            <img src="/icon/message.svg" />
+          </div>
           <button @click="sendMessage">获取验证码</button>
         </div>
       </div>
       <div class="form-item">
         <label>密码</label>
-        <input v-model="password" type="password" placeholder="请输入密码" />
+        <div class="input-container">
+          <input v-model="password" type="password" placeholder="请输入密码" />
+          <img src="/icon/lock.svg" />
+        </div>
       </div>
       <div class="form-item">
         <label>确认密码</label>
-        <input v-model="confirmedPassword" type="password" placeholder="请再次输入密码" />
+        <div class="input-container">
+          <input v-model="confirmedPassword" type="password" placeholder="请再次输入密码" />
+          <img src="/icon/lock.svg" />
+        </div>
       </div>
       <button>注册</button>
     </form>
@@ -56,6 +72,7 @@ function sendMessage(e: Event) {
   margin-bottom: 20px;
 
   h1 {
+    margin-top: 40px;
     font-size: 28px;
     margin-bottom: 6px;
   }
@@ -83,6 +100,19 @@ function sendMessage(e: Event) {
   }
 }
 
+.input-container {
+  position: relative;
+
+  img {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 22px;
+    height: 22px;
+  }
+}
+
 form {
   display: flex;
   flex-direction: column;
@@ -106,6 +136,7 @@ form {
 
   button {
     width: auto;
+    white-space: nowrap;
     padding-left: 20px;
     padding-right: 20px;
   }

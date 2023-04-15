@@ -45,6 +45,7 @@
 }
 
 .container:deep(h1) {
+  white-space: nowrap;
   font-size: 28px;
 }
 </style>

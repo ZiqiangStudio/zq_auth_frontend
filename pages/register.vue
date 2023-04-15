@@ -9,14 +9,14 @@
       <div class="form-item">
         <label>用户名</label>
         <div class="input-container">
-          <input v-model="username" placeholder="请输入用户名" />
+          <input v-model="username" required placeholder="请输入用户名" />
           <img src="/icon/user.svg" />
         </div>
       </div>
       <div class="form-item">
         <label>手机号</label>
         <div class="input-container">
-          <input v-model="phone" placeholder="请输入手机号" />
+          <input ref="phoneInputRef" v-model="phone" minlength="11" maxlength="11" type="tel" pattern="[0-9]+" required placeholder="请输入手机号" />
           <img src="/icon/phone.svg" />
         </div>
       </div>
@@ -24,23 +24,23 @@
         <label>验证码</label>
         <div class="sms-container">
           <div class="input-container">
-            <input v-model="sms" placeholder="请输入验证码" />
+            <input v-model="sms" required placeholder="请输入验证码" />
             <img src="/icon/message.svg" />
           </div>
-          <button @click="sendMessage">获取验证码</button>
+          <button :disabled="messageTimeout > 0" @click="sendMessage">{{ messageTimeout > 0 ? messageTimeout : '获取验证码' }}</button>
         </div>
       </div>
       <div class="form-item">
         <label>密码</label>
         <div class="input-container">
-          <input v-model="password" type="password" placeholder="请输入密码" />
+          <input v-model="password" required type="password" placeholder="请输入密码" />
           <img src="/icon/lock.svg" />
         </div>
       </div>
       <div class="form-item">
         <label>确认密码</label>
         <div class="input-container">
-          <input v-model="confirmedPassword" type="password" placeholder="请再次输入密码" />
+          <input v-model="confirmedPassword" required type="password" placeholder="请再次输入密码" />
           <img src="/icon/lock.svg" />
         </div>
       </div>
@@ -61,8 +61,28 @@ function submit(e: Event) {
   e.preventDefault();
 }
 
+const phoneInputRef = ref<HTMLInputElement | null>(null);
+const messageTimeout = ref(0);
+let intervalId = -1;
 function sendMessage(e: Event) {
-  console.log('');
+  if (!phoneInputRef.value) return;
+  if (!phoneInputRef.value.reportValidity()) return;
+  if (messageTimeout.value > 0) return;
+  $fetch<{ status: string }>('/api/auth/sms/', {
+    method: 'post',
+    body: {
+      phone: phone.value,
+    },
+  }).then((res) => {
+    messageTimeout.value = 60;
+    intervalId = setInterval(() => {
+      messageTimeout.value -= 1;
+      if (messageTimeout.value === 0) {
+        clearInterval(intervalId);
+      }
+    }, 1000);
+    console.log(res.status);
+  });
   e.preventDefault();
 }
 </script>
@@ -137,8 +157,13 @@ form {
   button {
     width: auto;
     white-space: nowrap;
-    padding-left: 20px;
-    padding-right: 20px;
+    width: 45%;
+    transition: color, background-color .3s;
+
+    &[disabled] {
+      color: var(--color-disabled);
+      background-color: var(--color-disabled-bg);
+    }
   }
 }
 </style>

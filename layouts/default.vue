@@ -16,6 +16,12 @@
   border-radius: var(--border-radius-m);
   font-size: 15px;
   background-color: var(--color-input-bg);
+
+  &::placeholder,
+  &::-webkit-input-placeholder,
+  &:-moz-placeholder {
+    color: var(--color-secondary);
+  }
 }
 
 :deep(label) {

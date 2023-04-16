@@ -16,5 +16,10 @@ import './assets/default.less';
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: var(--color-bg);
+}
+
+:deep(*) {
+  color: var(--color-text);
 }
 </style>

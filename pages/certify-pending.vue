@@ -18,6 +18,7 @@ function resend(e: Event) {
 </script>
 <style scoped lang="less">
 form {
+  margin-top: 32px;
   display: flex;
   flex-direction: column;
   gap: 12px;

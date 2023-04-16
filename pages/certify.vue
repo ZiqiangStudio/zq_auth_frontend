@@ -21,6 +21,7 @@ function submit(e: Event) {
 </script>
 <style scoped lang="less">
 form {
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
   gap: 12px;

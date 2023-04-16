@@ -1,6 +1,6 @@
 <template>
   <page-back />
-  <page-header image="/image/reset.svg" title="忘记密码" notice="通过账号绑定的手机号找回密码" />
+  <page-header image="/image/reset.svg" title="忘记密码" notice="通过账号绑定的手机号找回密码" title-gap="30px" />
   <form @submit="submit">
     <z-input
       ref="phoneInputRef"
@@ -114,6 +114,7 @@ function confirmedPasswordRule(value: string) {
 }
 
 form {
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
   gap: 12px;

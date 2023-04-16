@@ -46,38 +46,41 @@
   </form>
 </template>
 <script lang="ts" setup>
+const router = useRouter();
+
 const phone = ref('');
 const sms = ref('');
 const password = ref('');
 const confirmedPassword = ref('');
 
 function submit(e: Event) {
+  e.preventDefault();
   $fetch<ResBody<{ status: string }>>('/api/users/reset/', {
-    method: 'post',
+    method: 'POST',
     body: {
       phone: phone.value,
       code: sms.value,
       password: password.value,
     },
-  }).then((res) => {
-    console.log(res.data);
+  }).then(() => {
+    router.back();
   });
-  e.preventDefault();
 }
 
 const phoneInputRef = ref<HTMLInputElement | null>(null);
 const messageTimeout = ref(0);
 let intervalId = -1;
 function sendMessage(e: Event) {
+  e.preventDefault();
   if (!phoneInputRef.value) return;
   if (!phoneInputRef.value.reportValidity()) return;
   if (messageTimeout.value > 0) return;
   $fetch<ResBody<{ status: string }>>('/api/auth/sms/', {
-    method: 'post',
+    method: 'POST',
     body: {
       phone: phone.value,
     },
-  }).then((res) => {
+  }).then(() => {
     messageTimeout.value = 60;
     intervalId = setInterval(() => {
       messageTimeout.value -= 1;
@@ -85,9 +88,7 @@ function sendMessage(e: Event) {
         clearInterval(intervalId);
       }
     }, 1000);
-    console.log(res.data.status);
   });
-  e.preventDefault();
 }
 
 function confirmedPasswordRule(value: string) {

@@ -12,11 +12,46 @@
 const name = ref('');
 const studentId = ref('');
 
+const route = useRoute();
+const id = route.query.id?.toString() ?? '';
+
+const router = useRouter();
+
+interface ChangeRes {
+  id: number;
+  username: string;
+  name: string;
+  phone: string;
+  student_id: string;
+  is_certified: boolean;
+  certify_time: string | null;
+  update_time: string;
+  create_time: string;
+}
+
+interface SendRes {
+  to: string;
+  timeout: number;
+}
+
 function submit(e: Event) {
-  $fetch('/api/users/1/certify/', {
-    method: 'post',
-  });
   e.preventDefault();
+  if (id.length === 0) return;
+  request<ChangeRes>(`/api/users/${id}/`, {
+    method: 'PATCH',
+    body: {
+      name: name.value,
+      student_id: studentId.value,
+    }
+  })
+    .then(() => {
+      return request<SendRes>(`/api/users/${id}/certify/`, {
+        method: 'POST',
+      });
+    })
+    .then(() => {
+      router.push(`/certify-pending?id=${id}`);
+    });
 }
 </script>
 <style scoped lang="less">

@@ -76,8 +76,9 @@ const emit = defineEmits<{
 const inputRef = ref<HTMLInputElement | null>(null);
 function reportValidity() {
   if (inputRef.value) {
-    inputRef.value.reportValidity();
+    return inputRef.value.reportValidity();
   }
+  return false;
 }
 
 defineExpose({

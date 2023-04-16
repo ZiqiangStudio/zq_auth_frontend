@@ -25,7 +25,11 @@
         v-model="sms"
         label="验证码"
         icon="/icon/message.svg"
+        minlength="6"
+        maxlength="6"
+        type="number"
         required
+        pattern="[0-9]+"
         placeholder="请输入验证码"
       >
         <template #extra-input>
@@ -39,6 +43,7 @@
         label="密码"
         icon="/icon/lock.svg"
         required
+        type="password"
         placeholder="请输入密码"
       />
       <z-input
@@ -46,6 +51,7 @@
         label="确认密码"
         icon="/icon/lock.svg"
         required
+        type="password"
         placeholder="请再次输入密码"
         :custom-rule="confirmedPasswordRule"
       />
@@ -55,11 +61,15 @@
   </div>
 </template>
 <script lang="ts" setup>
+import ZInput from '@/components/z-input.vue';
+
 const username = ref('');
 const phone = ref('');
 const sms = ref('');
 const password = ref('');
 const confirmedPassword = ref('');
+
+const router = useRouter();
 
 interface RegisterRes {
   id: number;
@@ -71,11 +81,15 @@ interface RegisterRes {
   certify_time: null | string;
   update_time: string;
   create_time: string;
+  expire_time: string;
+  access: string;
+  refresh: string;
 }
 
 function submit(e: Event) {
+  e.preventDefault();
   $fetch<ResBody<RegisterRes>>('/api/users/', {
-    method: 'post',
+    method: 'POST',
     body: {
       username: username.value,
       phone: phone.value,
@@ -83,20 +97,23 @@ function submit(e: Event) {
       password: password.value,
     },
   }).then((res) => {
-    console.log(res.data.id);
+    localStorage.setItem('access', res.data.access);
+    localStorage.setItem('exp', res.data.expire_time);
+    localStorage.setItem('refresh', res.data.refresh);
+    router.push(`/certify?id=${res.data.id}`);
   });
-  e.preventDefault();
 }
 
-const phoneInputRef = ref<HTMLInputElement | null>(null);
+const phoneInputRef = ref<InstanceType<typeof ZInput> | null>(null);
 const messageTimeout = ref(0);
 let intervalId = -1;
 function sendMessage(e: Event) {
+  e.preventDefault();
   if (!phoneInputRef.value) return;
   if (!phoneInputRef.value.reportValidity()) return;
   if (messageTimeout.value > 0) return;
   $fetch<ResBody<{ status: string }>>('/api/auth/sms/', {
-    method: 'post',
+    method: 'POST',
     body: {
       phone: phone.value,
     },
@@ -108,9 +125,7 @@ function sendMessage(e: Event) {
         clearInterval(intervalId);
       }
     }, 1000);
-    console.log(res.data.status);
   });
-  e.preventDefault();
 }
 
 function confirmedPasswordRule(value: string) {

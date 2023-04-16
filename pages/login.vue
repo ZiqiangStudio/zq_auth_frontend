@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <page-header />
+    <page-header :app-logo="appLogo" />
     <form @submit="submit">
       <z-input v-model="username" label="用户名/手机号/学号" icon="/icon/user.svg" required placeholder="请输入用户名" />
       <z-input v-model="password" label="密码" icon="/icon/lock.svg" type="password" required placeholder="请输入密码">
@@ -17,13 +17,17 @@
 const username = ref('');
 const password = ref('');
 
+const route = useRoute();
+const appName = ref(route.params['app-name']?.toString() ?? '');
+const appLogo = ref(route.params['app-logo']?.toString() ?? '');
+
 function submit(e: Event) {
   $fetch<ResBody<{ code: string }>>('/api/sso/code/', {
     method: 'post',
     body: {
       username: username.value,
       password: password.value,
-      app: 'team',
+      app: appName.value,
     },
   }).then((res) => {
     console.log(res.data.code);

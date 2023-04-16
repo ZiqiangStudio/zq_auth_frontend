@@ -10,6 +10,7 @@
         placeholder="请输入用户名"
       />
       <z-input
+        ref="phoneInputRef"
         v-model="phone"
         label="手机号"
         icon="/icon/phone.svg"
@@ -46,6 +47,7 @@
         icon="/icon/lock.svg"
         required
         placeholder="请再次输入密码"
+        :custom-rule="confirmedPasswordRule"
       />
       <button>注册</button>
     </form>
@@ -53,11 +55,11 @@
   </div>
 </template>
 <script lang="ts" setup>
-const username = ref("");
-const phone = ref("");
-const sms = ref("");
-const password = ref("");
-const confirmedPassword = ref("");
+const username = ref('');
+const phone = ref('');
+const sms = ref('');
+const password = ref('');
+const confirmedPassword = ref('');
 
 function submit(e: Event) {
   $fetch('/api/users/', {
@@ -97,6 +99,11 @@ function sendMessage(e: Event) {
     console.log(res.status);
   });
   e.preventDefault();
+}
+
+function confirmedPasswordRule(value: string) {
+  if (value === password.value) return '';
+  return '确认密码必须与密码相同';
 }
 </script>
 <style lang="less" scoped>

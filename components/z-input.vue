@@ -7,11 +7,15 @@
     <div class="extra-input-container">
       <div class="input-container">
         <input
+          ref="inputRef"
           :value="modelValue"
           :type="type"
           :required="required"
           :placeholder="placeholder"
-          @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
+          :maxlength="maxlength"
+          :minlength="minlength"
+          :pattern="pattern"
+          @input="onChange"
         />
         <img :src="icon" />
       </div>
@@ -22,7 +26,7 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
 
-defineProps({
+const props = defineProps({
   modelValue: {
     type: String,
     required: true,
@@ -47,11 +51,52 @@ defineProps({
     type: String,
     required: true,
   },
+  minlength: {
+    type: String,
+    required: false,
+  },
+  maxlength: {
+    type: String,
+    required: false,
+  },
+  pattern: {
+    type: String,
+    required: false,
+  },
+  customRule: {
+    type: Function as PropType<(value: string) => string>,
+    required: false,
+  },
 });
 
-defineEmits<{
+const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void;
 }>();
+
+const inputRef = ref<HTMLInputElement | null>(null);
+function reportValidity() {
+  if (inputRef.value) {
+    inputRef.value.reportValidity();
+  }
+}
+
+defineExpose({
+  reportValidity,
+});
+
+function onChange(e: Event) {
+  const newValue = (e.target as HTMLInputElement).value;
+  if (props.customRule) {
+    const msg = props.customRule(newValue);
+    if (msg.length > 0 && inputRef.value) {
+      inputRef.value.setCustomValidity(msg);
+    } else if (inputRef.value) {
+      inputRef.value.setCustomValidity('');
+    }
+  }
+  emit('update:modelValue', newValue);
+}
+
 </script>
 <style lang="less" scoped>
 .form-item {
@@ -74,7 +119,7 @@ defineEmits<{
   display: flex;
   gap: 10px;
 
-  input {
+  div {
     flex: 1;
   }
 }

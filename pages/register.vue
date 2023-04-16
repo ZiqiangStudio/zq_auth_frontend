@@ -61,8 +61,20 @@ const sms = ref('');
 const password = ref('');
 const confirmedPassword = ref('');
 
+interface RegisterRes {
+  id: number;
+  username: string;
+  name: string;
+  phone: string;
+  student_id: string;
+  is_certified: boolean;
+  certify_time: null | string;
+  update_time: string;
+  create_time: string;
+}
+
 function submit(e: Event) {
-  $fetch('/api/users/', {
+  $fetch<ResBody<RegisterRes>>('/api/users/', {
     method: 'post',
     body: {
       username: username.value,
@@ -71,7 +83,7 @@ function submit(e: Event) {
       password: password.value,
     },
   }).then((res) => {
-    console.log(res.data);
+    console.log(res.data.id);
   });
   e.preventDefault();
 }
@@ -83,7 +95,7 @@ function sendMessage(e: Event) {
   if (!phoneInputRef.value) return;
   if (!phoneInputRef.value.reportValidity()) return;
   if (messageTimeout.value > 0) return;
-  $fetch<{ status: string }>('/api/auth/sms/', {
+  $fetch<ResBody<{ status: string }>>('/api/auth/sms/', {
     method: 'post',
     body: {
       phone: phone.value,
@@ -96,7 +108,7 @@ function sendMessage(e: Event) {
         clearInterval(intervalId);
       }
     }, 1000);
-    console.log(res.status);
+    console.log(res.data.status);
   });
   e.preventDefault();
 }

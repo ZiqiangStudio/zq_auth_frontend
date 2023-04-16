@@ -14,11 +14,11 @@
   </div>
 </template>
 <script lang="ts" setup>
-const username = ref("");
-const password = ref("");
+const username = ref('');
+const password = ref('');
 
 function submit(e: Event) {
-  $fetch('/api/sso/code/', {
+  $fetch<ResBody<{ code: string }>>('/api/sso/code/', {
     method: 'post',
     body: {
       username: username.value,

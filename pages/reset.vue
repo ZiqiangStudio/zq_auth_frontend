@@ -52,7 +52,7 @@ const password = ref('');
 const confirmedPassword = ref('');
 
 function submit(e: Event) {
-  $fetch('/api/users/reset/', {
+  $fetch<ResBody<{ status: string }>>('/api/users/reset/', {
     method: 'post',
     body: {
       phone: phone.value,
@@ -72,7 +72,7 @@ function sendMessage(e: Event) {
   if (!phoneInputRef.value) return;
   if (!phoneInputRef.value.reportValidity()) return;
   if (messageTimeout.value > 0) return;
-  $fetch<{ status: string }>('/api/auth/sms/', {
+  $fetch<ResBody<{ status: string }>>('/api/auth/sms/', {
     method: 'post',
     body: {
       phone: phone.value,
@@ -85,7 +85,7 @@ function sendMessage(e: Event) {
         clearInterval(intervalId);
       }
     }, 1000);
-    console.log(res.status);
+    console.log(res.data.status);
   });
   e.preventDefault();
 }

@@ -9,7 +9,7 @@
   box-sizing: border-box;
 }
 
-.container:deep(input) {
+:deep(input) {
   display: block;
   padding: 12px 12px 12px 42px;
   border: none;
@@ -18,14 +18,14 @@
   background-color: var(--color-input-bg);
 }
 
-.container:deep(label) {
+:deep(label) {
   display: block;
   font-size: 13px;
   margin-bottom: 4px;
   font-weight: bold;
 }
 
-.container:deep(button) {
+:deep(button) {
   border: none;
   border-radius: var(--border-radius-m);
   background-color: var(--color-primary);
@@ -35,16 +35,16 @@
   color: #FFFFFF;
 }
 
-.container:deep(strong) {
+:deep(strong) {
   color: var(--color-primary);
 }
 
-.container:deep(a) {
+:deep(a) {
   text-decoration: none;
   color: var(--color-primary);
 }
 
-.container:deep(h1) {
+:deep(h1) {
   white-space: nowrap;
   font-size: 28px;
 }

@@ -5,7 +5,7 @@
       <z-input v-model="username" label="用户名/手机号/学号" icon="/icon/user.svg" required placeholder="请输入用户名" />
       <z-input v-model="password" label="密码" icon="/icon/lock.svg" type="password" required placeholder="请输入密码">
         <template #extra-label>
-          <nuxt-link to="find">忘记密码？</nuxt-link>
+          <nuxt-link to="/reset">忘记密码？</nuxt-link>
         </template>
       </z-input>
       <button>登录</button>

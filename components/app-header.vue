@@ -4,7 +4,7 @@
       <img src="/icon/zq-logo.svg" alt="自强Studio Logo" />
     </div>
     <div class="connect">
-      <img src="/icon/connect.svg" alt="子应用Logo" />
+      <Connect class="connect-icon" />
     </div>
     <div class="logo">
       <img :src="appLogo" />
@@ -12,6 +12,8 @@
   </div>
 </template>
 <script setup lang="ts">
+import Connect from 'assets/icon/connect.svg?component';
+
 defineProps({
   appLogo: {
     type: String,
@@ -27,6 +29,10 @@ defineProps({
   gap: 2rem;
 }
 
+.connect-icon {
+  fill: var(--color-primary);
+}
+
 .logo {
   width: 80px;
   height: 80px;
@@ -35,7 +41,6 @@ defineProps({
   display: flex;
   align-items: center;
   justify-content: center;
-
 
   img {
     max-width: 80px;

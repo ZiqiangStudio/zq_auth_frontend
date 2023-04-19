@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="logo">
-      <img src="/icon/zq_logo.svg" alt="自强Studio Logo" />
+      <img src="/icon/zq-logo.svg" alt="自强Studio Logo" />
     </div>
     <div class="connect">
       <img src="/icon/connect.svg" alt="子应用Logo" />

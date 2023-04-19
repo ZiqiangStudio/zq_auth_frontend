@@ -2,8 +2,15 @@
   <div class="container">
     <page-header :app-logo="appLogo" />
     <form @submit="submit">
-      <z-input v-model="username" label="用户名/手机号/学号" icon="/icon/user.svg" required placeholder="请输入用户名" />
-      <z-input v-model="password" label="密码" icon="/icon/lock.svg" type="password" required placeholder="请输入密码">
+      <z-input v-model="username" label="用户名/手机号/学号" required placeholder="请输入用户名">
+        <template #prefix>
+          <User />
+        </template>
+      </z-input>
+      <z-input v-model="password" label="密码" type="password" required placeholder="请输入密码">
+        <template #prefix>
+          <Lock />
+        </template>
         <template #extra-label>
           <nuxt-link to="/reset">忘记密码？</nuxt-link>
         </template>
@@ -14,6 +21,9 @@
   </div>
 </template>
 <script lang="ts" setup>
+import User from 'assets/icon/user.svg?component';
+import Lock from 'assets/icon/lock.svg?component';
+
 const username = ref('');
 const password = ref('');
 

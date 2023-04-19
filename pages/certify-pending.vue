@@ -1,6 +1,6 @@
 <template>
   <page-back />
-  <page-header image="/image/certify-pending.svg" title="验证邮件已发送" notice="验证邮件已发送至2019301040084@whu.edu.cn" />
+  <page-header :image="image" title="验证邮件已发送" notice="验证邮件已发送至2019301040084@whu.edu.cn" />
   <form @submit="submit">
     <button>已在邮箱中完成验证</button>
     <button class="resend" :disabled="messageTimeout > 0" @click="resend">重新发送邮件{{ messageTimeout > 0 ? ` (${messageTimeout})` : '' }}</button>
@@ -10,6 +10,8 @@
 <script lang="ts" setup>
 const route = useRoute();
 const id = route.params.id?.toString() ?? '';
+
+const image = isDark ? '/image/certify-pending-dark.svg' : '/image/certify-pending.svg';
 
 const messageTimeout = ref(0);
 function resetTimeout() {

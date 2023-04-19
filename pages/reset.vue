@@ -1,26 +1,31 @@
 <template>
   <page-back />
-  <page-header image="/image/reset.svg" title="忘记密码" notice="通过账号绑定的手机号找回密码" title-gap="30px" />
+  <page-header :image="image" title="忘记密码" notice="通过账号绑定的手机号找回密码" title-gap="30px" />
   <form @submit="submit">
     <z-input
       ref="phoneInputRef"
       v-model="phone"
       label="手机号"
-      icon="/icon/phone.svg"
       required
       minlength="11"
       maxlength="11"
       type="tel"
       pattern="[0-9]+"
       placeholder="请输入手机号"
-    />
+    >
+      <template #prefix>
+        <Phone />
+      </template>
+    </z-input>
     <z-input
       v-model="sms"
       label="验证码"
-      icon="/icon/message.svg"
       required
       placeholder="请输入验证码"
     >
+      <template #prefix>
+        <Message />
+      </template>
       <template #extra-input>
         <button class="send" :disabled="messageTimeout > 0" @click="sendMessage">
           {{ messageTimeout > 0 ? messageTimeout : '获取验证码' }}
@@ -30,23 +35,35 @@
     <z-input
       v-model="password"
       label="新密码"
-      icon="/icon/lock.svg"
       required
       placeholder="请输入新密码"
-    />
+    >
+      <template #prefix>
+        <Lock />
+      </template>
+    </z-input>
     <z-input
       v-model="confirmedPassword"
       label="确认密码"
-      icon="/icon/lock.svg"
       required
       placeholder="请再次输入新密码"
       :custom-rule="confirmedPasswordRule"
-    />
-    <button>重置密码</button>
+    >
+      <template #prefix>
+        <Lock />
+      </template>
+    </z-input>
+    <button class="submit">重置密码</button>
   </form>
 </template>
 <script lang="ts" setup>
+import Lock from 'assets/icon/lock.svg?component';
+import Message from 'assets/icon/message.svg?component';
+import Phone from 'assets/icon/phone.svg?component';
+
 const router = useRouter();
+
+const image = isDark ? '/image/reset-dark.svg' : '/image/reset.svg';
 
 const phone = ref('');
 const sms = ref('');
@@ -119,6 +136,10 @@ form {
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+form .submit {
+  margin-top: 8px;
 }
 
 .action {

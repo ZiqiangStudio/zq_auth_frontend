@@ -17,7 +17,9 @@
           :pattern="pattern"
           @input="onChange"
         />
-        <img :src="icon" />
+        <div class="icon">
+          <slot name="prefix" />
+        </div>
       </div>
       <slot name="extra-input" />
     </div>
@@ -42,10 +44,6 @@ const props = defineProps({
   required: {
     type: Boolean,
     default: false,
-  },
-  icon: {
-    type: String,
-    required: true,
   },
   placeholder: {
     type: String,
@@ -128,13 +126,19 @@ function onChange(e: Event) {
 .input-container {
   position: relative;
 
-  img {
+  .icon {
     position: absolute;
     left: 11px;
     top: 50%;
     transform: translateY(-50%);
     width: 22px;
     height: 22px;
+
+    &:deep(svg) {
+      width: 100%;
+      height: 100%;
+      fill: var(--color-primary);
+    }
   }
 }
 

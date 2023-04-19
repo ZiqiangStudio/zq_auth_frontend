@@ -1,7 +1,9 @@
 <template>
-  <button class="back" @click="back"><img src="/icon/back.svg" /></button>
+  <button class="back" @click="back"><Back class="icon" /></button>
 </template>
 <script lang="ts" setup>
+import Back from 'assets/icon/back.svg?component';
+
 const router = useRouter();
 function back() {
   router.back();
@@ -15,9 +17,10 @@ function back() {
   background: none;
   padding: 0;
 
-  img {
+  .icon {
     width: 20px;
     height: 20px;
+    fill: var(--color-text);
   }
 }
 </style>

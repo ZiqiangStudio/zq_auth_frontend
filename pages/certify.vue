@@ -1,14 +1,27 @@
 <template>
   <page-back />
-  <page-header image="/image/certify.svg" title="验证学生身份" notice="我们会发送一封邮件到您的武大邮箱来验证您的学生身份" />
+  <page-header :image="image" title="验证学生身份" notice="我们会发送一封邮件到您的武大邮箱来验证您的学生身份" />
   <form @submit="submit">
-    <z-input v-model="name" label="姓名" icon="/icon/user.svg" required placeholder="请输入姓名" />
-    <z-input v-model="studentId" label="学号" icon="/icon/info.svg" required placeholder="请输入学号" />
+    <z-input v-model="name" label="姓名" required placeholder="请输入姓名">
+      <template #prefix>
+        <User />
+      </template>
+    </z-input>
+    <z-input v-model="studentId" label="学号" required placeholder="请输入学号">
+      <template #prefix>
+        <Message />
+      </template>
+    </z-input>
     <button>发送验证邮件</button>
   </form>
   <p class="action"><nuxt-link to="/register">无法访问武大邮箱？</nuxt-link></p>
 </template>
 <script lang="ts" setup>
+import User from 'assets/icon/user.svg?component';
+import Message from 'assets/icon/message.svg?component';
+
+const image = isDark ? '/image/certify-dark.svg' : '/image/certify.svg';
+
 const name = ref('');
 const studentId = ref('');
 

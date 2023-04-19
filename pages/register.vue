@@ -5,26 +5,31 @@
       <z-input
         v-model="username"
         label="用户名"
-        icon="/icon/user.svg"
         required
         placeholder="请输入用户名"
-      />
+      >
+        <template #prefix>
+          <User />
+        </template>
+      </z-input>
       <z-input
         ref="phoneInputRef"
         v-model="phone"
         label="手机号"
-        icon="/icon/phone.svg"
         required
         minlength="11"
         maxlength="11"
         type="tel"
         pattern="[0-9]+"
         placeholder="请输入手机号"
-      />
+      >
+        <template #prefix>
+          <Phone />
+        </template>
+      </z-input>
       <z-input
         v-model="sms"
         label="验证码"
-        icon="/icon/message.svg"
         minlength="6"
         maxlength="6"
         type="number"
@@ -32,6 +37,9 @@
         pattern="[0-9]+"
         placeholder="请输入验证码"
       >
+        <template #prefix>
+          <Message />
+        </template>
         <template #extra-input>
           <button class="send" :disabled="messageTimeout > 0" @click="sendMessage">
             {{ messageTimeout > 0 ? messageTimeout : '获取验证码' }}
@@ -41,27 +49,37 @@
       <z-input
         v-model="password"
         label="密码"
-        icon="/icon/lock.svg"
         required
         type="password"
         placeholder="请输入密码"
-      />
+      >
+        <template #prefix>
+          <Lock />
+        </template>
+      </z-input>
       <z-input
         v-model="confirmedPassword"
         label="确认密码"
-        icon="/icon/lock.svg"
         required
         type="password"
         placeholder="请再次输入密码"
         :custom-rule="confirmedPasswordRule"
-      />
-      <button>注册</button>
+      >
+        <template #prefix>
+          <Lock />
+        </template>
+      </z-input>
+      <button class="submit">注册</button>
     </form>
     <p class="action">已有账号？<nuxt-link to="/login"><strong>立即登录</strong></nuxt-link></p>
   </div>
 </template>
 <script lang="ts" setup>
 import ZInput from '@/components/z-input.vue';
+import Lock from 'assets/icon/lock.svg?component';
+import Message from 'assets/icon/message.svg?component';
+import User from 'assets/icon/user.svg?component';
+import Phone from 'assets/icon/phone.svg?component';
 
 const username = ref('');
 const phone = ref('');
@@ -156,6 +174,10 @@ form {
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+form .submit {
+  margin-top: 8px;
 }
 
 .action {

@@ -1,5 +1,8 @@
 export function getIsDark() {
-  return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if (process.client) {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  return false;
 }
 
 export const isDark = getIsDark();

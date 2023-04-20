@@ -8,6 +8,7 @@
 <script setup lang="ts">
 import './assets/var.less';
 import './assets/default.less';
+import 'vue-m-message/dist/style.css';
 </script>
 <style lang="less" scoped>
 .container {

@@ -6,7 +6,7 @@
         v-model="username"
         maxlength="16"
         minlength="4"
-        pattern="^[a-zA-Z0-9_-]{4,16}$"
+        pattern="[a-zA-Z0-9_\-]+"
         label="用户名/手机号/学号"
         required
         placeholder="请输入用户名"
@@ -21,7 +21,7 @@
         label="密码"
         maxlength="18"
         minlength="6"
-        pattern="^[a-zA-Z0-9_-]{6,18}$"
+        pattern="[a-zA-Z0-9_\-]+"
         type="password"
         required
         placeholder="请输入密码"
@@ -43,6 +43,7 @@
 <script lang="ts" setup>
 import User from 'assets/icon/user.svg?component';
 import Lock from 'assets/icon/lock.svg?component';
+import MMessage from 'vue-m-message';
 
 const username = ref('');
 const password = ref('');
@@ -51,17 +52,41 @@ const route = useRoute();
 const appName = ref(route.params['app-name']?.toString() ?? '');
 const appLogo = ref(route.params['app-logo']?.toString() ?? '');
 
+interface LoginRes {
+  id: number;
+  username: string;
+  is_certified: boolean;
+  expire_time: string;
+  access: string;
+  refresh: string;
+}
+
 function submit(e: Event) {
-  $fetch<ResBody<{ code: string }>>('/api/sso/code/', {
-    method: 'post',
+  $fetch<ResBody<LoginRes>>('/api/auth/users/', {
+    method: 'POST',
     body: {
       username: username.value,
       password: password.value,
-      app: appName.value,
     },
-  }).then((res) => {
-    console.log(res.data.code);
-  });
+  })
+    .then((res) => {
+      localStorage.setItem('access', res.data.access);
+      localStorage.setItem('exp', res.data.expire_time);
+      localStorage.setItem('refresh', res.data.refresh);
+
+      return request<ResBody<{ code: string }>>('/api/sso/code/', {
+        method: 'POST',
+        body: {
+          app: appName.value,
+        },
+      });
+    })
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => {
+      MMessage.error(err.data.msg);
+    });
   e.preventDefault();
 }
 

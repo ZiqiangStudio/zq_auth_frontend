@@ -10,6 +10,8 @@
   <p class="action"><nuxt-link to="/register">无法访问武大邮箱？</nuxt-link></p>
 </template>
 <script lang="ts" setup>
+import MMessage from 'vue-m-message';
+
 const route = useRoute();
 const id = route.params.id?.toString() ?? '';
 
@@ -38,11 +40,15 @@ function submit(e: Event) {
   e.preventDefault();
   request<CertifyRes>(`/api/users/${id}/certify/`, {
     method: 'GET',
-  }).then((res) => {
-    if (res.data.is_certified) {
-      location.href = '/';
-    }
-  });
+  })
+    .then((res) => {
+      if (res.data.is_certified) {
+        location.href = '/';
+      }
+    })
+    .catch((err) => {
+      MMessage.error(err.data.msg);
+    });
 }
 
 interface SendRes {

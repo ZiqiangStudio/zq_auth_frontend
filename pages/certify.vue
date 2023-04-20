@@ -19,6 +19,7 @@
 <script lang="ts" setup>
 import User from 'assets/icon/user.svg?component';
 import Message from 'assets/icon/message.svg?component';
+import MMessage from 'vue-m-message';
 
 const image = isDark ? '/image/certify-dark.svg' : '/image/certify.svg';
 
@@ -64,6 +65,9 @@ function submit(e: Event) {
     })
     .then(() => {
       router.push(`/certify-pending?id=${id}`);
+    })
+    .catch((err) => {
+      MMessage.error(err.data.msg);
     });
 }
 </script>

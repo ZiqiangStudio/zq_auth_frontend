@@ -8,7 +8,7 @@
         required
         maxlength="16"
         minlength="4"
-        pattern="^[a-zA-Z0-9_-]{4,16}$"
+        pattern="[a-zA-Z0-9_\-]+"
         placeholder="请输入用户名"
         :custom-rule="usernameRule"
       >
@@ -24,7 +24,7 @@
         minlength="11"
         maxlength="11"
         type="tel"
-        pattern="[0-9]+"
+        pattern="1[3-9]\d+"
         placeholder="请输入手机号"
       >
         <template #prefix>
@@ -57,7 +57,7 @@
         type="password"
         maxlength="18"
         minlength="6"
-        pattern="^[a-zA-Z0-9_-]{6,18}$"
+        pattern="[a-zA-Z0-9_\-]+"
         placeholder="请输入密码"
       >
         <template #prefix>
@@ -71,7 +71,7 @@
         type="password"
         maxlength="18"
         minlength="6"
-        pattern="^[a-zA-Z0-9_-]{6,18}$"
+        pattern="[a-zA-Z0-9_\-]+"
         placeholder="请再次输入密码"
         :custom-rule="confirmedPasswordRule"
       >
@@ -92,6 +92,7 @@ import Lock from 'assets/icon/lock.svg?component';
 import Message from 'assets/icon/message.svg?component';
 import User from 'assets/icon/user.svg?component';
 import Phone from 'assets/icon/phone.svg?component';
+import MMessage from 'vue-m-message';
 
 const username = ref('');
 const phone = ref('');
@@ -126,12 +127,16 @@ function submit(e: Event) {
       code: sms.value,
       password: password.value,
     },
-  }).then((res) => {
-    localStorage.setItem('access', res.data.access);
-    localStorage.setItem('exp', res.data.expire_time);
-    localStorage.setItem('refresh', res.data.refresh);
-    router.push(`/certify?id=${res.data.id}`);
-  });
+  })
+    .then((res) => {
+      localStorage.setItem('access', res.data.access);
+      localStorage.setItem('exp', res.data.expire_time);
+      localStorage.setItem('refresh', res.data.refresh);
+      router.push(`/certify?id=${res.data.id}`);
+    })
+    .catch((err) => {
+      MMessage.error(err.data.msg);
+    });
 }
 
 const phoneInputRef = ref<InstanceType<typeof ZInput> | null>(null);
@@ -147,15 +152,19 @@ function sendMessage(e: Event) {
     body: {
       phone: phone.value,
     },
-  }).then((res) => {
-    messageTimeout.value = 60;
-    intervalId = setInterval(() => {
-      messageTimeout.value -= 1;
-      if (messageTimeout.value === 0) {
-        clearInterval(intervalId);
-      }
-    }, 1000);
-  });
+  })
+    .then((res) => {
+      messageTimeout.value = 60;
+      intervalId = setInterval(() => {
+        messageTimeout.value -= 1;
+        if (messageTimeout.value === 0) {
+          clearInterval(intervalId);
+        }
+      }, 1000);
+    })
+    .catch((err) => {
+      MMessage.error(err.data.msg);
+    });
 }
 
 function usernameRule(value: string) {

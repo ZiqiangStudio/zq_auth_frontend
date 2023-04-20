@@ -31,7 +31,7 @@
       v-model="password"
       maxlength="18"
       minlength="6"
-      pattern="^[a-zA-Z0-9_-]{6,18}$"
+      pattern="[a-zA-Z0-9_\-]+"
       type="password"
       label="新密码"
       required
@@ -48,7 +48,7 @@
       minlength="6"
       required
       type="password"
-      pattern="^[a-zA-Z0-9_-]{6,18}$"
+      pattern="[a-zA-Z0-9_\-]+"
       placeholder="请再次输入新密码"
       :custom-rule="confirmedPasswordRule"
     >
@@ -63,6 +63,7 @@
 import Lock from 'assets/icon/lock.svg?component';
 import Message from 'assets/icon/message.svg?component';
 import Phone from 'assets/icon/phone.svg?component';
+import MMessage from 'vue-m-message';
 
 const router = useRouter();
 
@@ -82,9 +83,13 @@ function submit(e: Event) {
       code: sms.value,
       password: password.value,
     },
-  }).then(() => {
-    router.back();
-  });
+  })
+    .then(() => {
+      router.back();
+    })
+    .catch((err) => {
+      MMessage.error(err.data.msg);
+    });
 }
 
 const phoneInputRef = ref<HTMLInputElement | null>(null);
@@ -100,15 +105,19 @@ function sendMessage(e: Event) {
     body: {
       phone: phone.value,
     },
-  }).then(() => {
-    messageTimeout.value = 60;
-    intervalId = setInterval(() => {
-      messageTimeout.value -= 1;
-      if (messageTimeout.value === 0) {
-        clearInterval(intervalId);
-      }
-    }, 1000);
-  });
+  })
+    .then(() => {
+      messageTimeout.value = 60;
+      intervalId = setInterval(() => {
+        messageTimeout.value -= 1;
+        if (messageTimeout.value === 0) {
+          clearInterval(intervalId);
+        }
+      }, 1000);
+    })
+    .catch((err) => {
+      MMessage.error(err.data.msg);
+    });
 }
 
 function confirmedPasswordRule(value: string) {

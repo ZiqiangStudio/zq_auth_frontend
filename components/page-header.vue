@@ -43,6 +43,7 @@ header {
   .notice {
     padding: 0 20px;
     font-size: 15px;
+    line-height: 21px;
     color: var(--color-secondary);
   }
 }

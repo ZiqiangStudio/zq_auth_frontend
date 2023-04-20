@@ -127,17 +127,21 @@ function onChange(e: Event) {
 
   .icon {
     position: absolute;
-    left: 11px;
+    left: 10px;
     top: 50%;
     transform: translateY(-50%);
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
 
     &:deep(svg) {
       width: 100%;
       height: 100%;
       fill: var(--color-primary);
     }
+  }
+
+  input {
+    padding: 12px 12px 12px 42px;
   }
 }
 </style>

@@ -2,12 +2,30 @@
   <div class="container">
     <page-header :app-logo="appLogo" />
     <form @submit="submit">
-      <z-input v-model="username" label="用户名/手机号/学号" required placeholder="请输入用户名">
+      <z-input
+        v-model="username"
+        maxlength="16"
+        minlength="4"
+        pattern="^[a-zA-Z0-9_-]{4,16}$"
+        label="用户名/手机号/学号"
+        required
+        placeholder="请输入用户名"
+        :custom-rule="usernameRule"
+      >
         <template #prefix>
           <User />
         </template>
       </z-input>
-      <z-input v-model="password" label="密码" type="password" required placeholder="请输入密码">
+      <z-input
+        v-model="password"
+        label="密码"
+        maxlength="18"
+        minlength="6"
+        pattern="^[a-zA-Z0-9_-]{6,18}$"
+        type="password"
+        required
+        placeholder="请输入密码"
+      >
         <template #prefix>
           <Lock />
         </template>
@@ -45,6 +63,11 @@ function submit(e: Event) {
     console.log(res.data.code);
   });
   e.preventDefault();
+}
+
+function usernameRule(value: string) {
+  if (/^\d+$/.test(value)) return '用户名不能全为数字';
+  return '';
 }
 </script>
 <style lang="less" scoped>

@@ -2,7 +2,16 @@
   <div class="container">
     <page-header />
     <form @submit="submit">
-      <z-input v-model="username" label="用户名" required placeholder="请输入用户名">
+      <z-input
+        v-model="username"
+        label="用户名"
+        required
+        maxlength="16"
+        minlength="4"
+        pattern="^[a-zA-Z0-9_-]{4,16}$"
+        placeholder="请输入用户名"
+        :custom-rule="usernameRule"
+      >
         <template #prefix>
           <User />
         </template>
@@ -41,7 +50,16 @@
           </button>
         </template>
       </z-input>
-      <z-input v-model="password" label="密码" required type="password" placeholder="请输入密码">
+      <z-input
+        v-model="password"
+        label="密码"
+        required
+        type="password"
+        maxlength="18"
+        minlength="6"
+        pattern="^[a-zA-Z0-9_-]{6,18}$"
+        placeholder="请输入密码"
+      >
         <template #prefix>
           <Lock />
         </template>
@@ -51,6 +69,9 @@
         label="确认密码"
         required
         type="password"
+        maxlength="18"
+        minlength="6"
+        pattern="^[a-zA-Z0-9_-]{6,18}$"
         placeholder="请再次输入密码"
         :custom-rule="confirmedPasswordRule"
       >
@@ -137,6 +158,10 @@ function sendMessage(e: Event) {
   });
 }
 
+function usernameRule(value: string) {
+  if (/^\d+$/.test(value)) return '用户名不能全为数字';
+  return '';
+}
 function confirmedPasswordRule(value: string) {
   if (value === password.value) return '';
   return '确认密码必须与密码相同';

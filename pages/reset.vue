@@ -17,7 +17,7 @@
         <Phone />
       </template>
     </z-input>
-    <z-input v-model="sms" label="验证码" required placeholder="请输入验证码">
+    <z-input v-model="sms" maxlength="6" minlength="6" type="number" label="验证码" required placeholder="请输入验证码">
       <template #prefix>
         <Message />
       </template>
@@ -27,7 +27,16 @@
         </button>
       </template>
     </z-input>
-    <z-input v-model="password" label="新密码" required placeholder="请输入新密码">
+    <z-input
+      v-model="password"
+      maxlength="18"
+      minlength="6"
+      pattern="^[a-zA-Z0-9_-]{6,18}$"
+      type="password"
+      label="新密码"
+      required
+      placeholder="请输入新密码"
+    >
       <template #prefix>
         <Lock />
       </template>
@@ -35,7 +44,11 @@
     <z-input
       v-model="confirmedPassword"
       label="确认密码"
+      maxlength="18"
+      minlength="6"
       required
+      type="password"
+      pattern="^[a-zA-Z0-9_-]{6,18}$"
       placeholder="请再次输入新密码"
       :custom-rule="confirmedPasswordRule"
     >

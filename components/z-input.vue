@@ -2,7 +2,7 @@
   <div class="form-item">
     <div class="label-container">
       <label>{{ label }}</label>
-      <slot name="extra-label"/>
+      <slot name="extra-label" />
     </div>
     <div class="extra-input-container">
       <div class="input-container">
@@ -95,7 +95,6 @@ function onChange(e: Event) {
   }
   emit('update:modelValue', newValue);
 }
-
 </script>
 <style lang="less" scoped>
 .form-item {
@@ -141,5 +140,4 @@ function onChange(e: Event) {
     }
   }
 }
-
 </style>

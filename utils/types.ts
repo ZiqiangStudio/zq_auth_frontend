@@ -1,8 +1,8 @@
 /// <reference types="vite-svg-loader" />
 
-type ResBody<T> = {
+export type ResBody<T> = {
   code: string;
   detail: string;
   msg: string;
   data: T;
-}
+};

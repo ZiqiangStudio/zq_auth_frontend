@@ -3,7 +3,9 @@
   <page-header :image="image" title="验证邮件已发送" notice="验证邮件已发送至2019301040084@whu.edu.cn" />
   <form @submit="submit">
     <button>已在邮箱中完成验证</button>
-    <button class="resend" :disabled="messageTimeout > 0" @click="resend">重新发送邮件{{ messageTimeout > 0 ? ` (${messageTimeout})` : '' }}</button>
+    <button class="resend" :disabled="messageTimeout > 0" @click="resend">
+      重新发送邮件{{ messageTimeout > 0 ? ` (${messageTimeout})` : '' }}
+    </button>
   </form>
   <p class="action"><nuxt-link to="/register">无法访问武大邮箱？</nuxt-link></p>
 </template>
@@ -40,7 +42,7 @@ function submit(e: Event) {
     if (res.data.is_certified) {
       location.href = '/';
     }
-  })
+  });
 }
 
 interface SendRes {
@@ -68,7 +70,7 @@ form {
 .resend {
   background-color: var(--color-button-secondary-bg);
   color: var(--color-primary);
-  transition: color, background-color .3s;
+  transition: color, background-color 0.3s;
 
   &[disabled] {
     color: var(--color-disabled);

@@ -2,12 +2,7 @@
   <div class="container">
     <page-header />
     <form @submit="submit">
-      <z-input
-        v-model="username"
-        label="用户名"
-        required
-        placeholder="请输入用户名"
-      >
+      <z-input v-model="username" label="用户名" required placeholder="请输入用户名">
         <template #prefix>
           <User />
         </template>
@@ -46,13 +41,7 @@
           </button>
         </template>
       </z-input>
-      <z-input
-        v-model="password"
-        label="密码"
-        required
-        type="password"
-        placeholder="请输入密码"
-      >
+      <z-input v-model="password" label="密码" required type="password" placeholder="请输入密码">
         <template #prefix>
           <Lock />
         </template>
@@ -71,7 +60,9 @@
       </z-input>
       <button class="submit">注册</button>
     </form>
-    <p class="action">已有账号？<nuxt-link to="/login"><strong>立即登录</strong></nuxt-link></p>
+    <p class="action">
+      已有账号？<nuxt-link to="/login"><strong>立即登录</strong></nuxt-link>
+    </p>
   </div>
 </template>
 <script lang="ts" setup>
@@ -191,7 +182,7 @@ form .submit {
   width: auto;
   white-space: nowrap;
   width: 45%;
-  transition: color, background-color .3s;
+  transition: color, background-color 0.3s;
 
   &[disabled] {
     color: var(--color-disabled);

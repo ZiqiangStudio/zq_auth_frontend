@@ -38,7 +38,7 @@
   font-size: 18px;
   padding-top: 8px;
   padding-bottom: 8px;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 :deep(strong) {

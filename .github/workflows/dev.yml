@@ -6,15 +6,30 @@ on:
   workflow_dispatch:
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Use Node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.2.4
+        with:
+          version: 7.25.0
+          run_install: true
+      - name: Code lint
+        run: pnpm lint
   build:
-    permissions:
-      pages: write
-      id-token: write
-
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Setup Node.js 18
         uses: actions/setup-node@v3.6.0
         with:
@@ -26,9 +41,3 @@ jobs:
           run_install: true
       - name: Build (Generate static files)
         run: pnpm generate
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1.0.7
-        with:
-          path: 'dist'
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v2

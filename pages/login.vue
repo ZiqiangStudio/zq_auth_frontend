@@ -17,7 +17,9 @@
       </z-input>
       <button>登录</button>
     </form>
-    <p class="action">还没有账号？<nuxt-link to="/register"><strong>立即注册</strong></nuxt-link></p>
+    <p class="action">
+      还没有账号？<nuxt-link to="/register"><strong>立即注册</strong></nuxt-link>
+    </p>
   </div>
 </template>
 <script lang="ts" setup>

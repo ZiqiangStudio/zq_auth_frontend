@@ -12,7 +12,7 @@ interface RequestOptions {
 export async function request<T>(url: string, options: RequestOptions) {
   let access = localStorage.getItem('access');
   const refresh = localStorage.getItem('refresh');
-  let exp = localStorage.getItem('exp');
+  const exp = localStorage.getItem('exp');
   if (!access || !exp) return;
   if (Date.now() > new Date(exp).getTime()) {
     try {

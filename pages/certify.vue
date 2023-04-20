@@ -55,7 +55,7 @@ function submit(e: Event) {
     body: {
       name: name.value,
       student_id: studentId.value,
-    }
+    },
   })
     .then(() => {
       return request<SendRes>(`/api/users/${id}/certify/`, {

@@ -15,8 +15,6 @@ export default defineNuxtConfig({
     strict: true,
   },
   vite: {
-    plugins: [
-      svgLoader(),
-    ],
+    plugins: [svgLoader()],
   },
 });

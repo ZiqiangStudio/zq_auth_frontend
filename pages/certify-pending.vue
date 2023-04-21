@@ -13,7 +13,7 @@
 import MMessage from 'vue-m-message';
 
 const route = useRoute();
-const id = route.params.id?.toString() ?? '';
+const id = route.query.id?.toString() ?? '';
 
 const image = isDark ? '/image/certify-pending-dark.svg' : '/image/certify-pending.svg';
 

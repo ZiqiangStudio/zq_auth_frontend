@@ -49,8 +49,8 @@ const username = ref('');
 const password = ref('');
 
 const route = useRoute();
-const appName = ref(route.params['app-name']?.toString() ?? '');
-const appLogo = ref(route.params['app-logo']?.toString() ?? '');
+const appName = ref(route.query['app-name']?.toString() ?? '');
+const appLogo = ref(route.query['app-logo']?.toString() ?? '');
 
 interface LoginRes {
   id: number;

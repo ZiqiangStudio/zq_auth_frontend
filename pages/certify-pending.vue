@@ -42,11 +42,12 @@ function submit(e: Event) {
     method: 'GET',
   })
     .then((res) => {
-      if (res.data.is_certified) {
-        location.href = '/';
+      if (res.is_certified) {
+        location.href = '/login';
       }
     })
     .catch((err) => {
+      console.error(err);
       MMessage.error(err.data.msg);
     });
 }

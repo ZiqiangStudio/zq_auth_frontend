@@ -82,9 +82,18 @@ function submit(e: Event) {
       });
     })
     .then((res) => {
-      console.log(res);
+      if (process.client && window.opener) {
+        window.opener.postMessage(
+          {
+            code: res.code,
+          },
+          '*',
+        );
+        window.close();
+      }
     })
     .catch((err) => {
+      console.error(err);
       MMessage.error(err.data.msg);
     });
   e.preventDefault();

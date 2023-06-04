@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>自强Auth调用</title>
+</head>
+
+<body>
+    <button onclick="login()">登录</button>
+    <script>
+        window.addEventListener('message', (event) => {
+            console.log(event.data);
+        });
+        function login() {
+            const subWindow = window.open('http://zq-auth.saltroping.com/login?app-name=zq_recruitment&app-logo=test', '_blank', 'left=300,top=150,height=650,width=500');
+        }
+    </script>
+</body>
+
+</html>

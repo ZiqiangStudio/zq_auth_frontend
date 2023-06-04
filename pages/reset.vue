@@ -76,7 +76,7 @@ const confirmedPassword = ref('');
 
 function submit(e: Event) {
   e.preventDefault();
-  $fetch<ResBody<{ status: string }>>('/api/users/reset/', {
+  $fetch<ResBody<{ status: string }>>('https://api.cas.ziqiang.net.cn/users/reset/', {
     method: 'POST',
     body: {
       phone: phone.value,
@@ -100,7 +100,7 @@ function sendMessage(e: Event) {
   if (!phoneInputRef.value) return;
   if (!phoneInputRef.value.reportValidity()) return;
   if (messageTimeout.value > 0) return;
-  $fetch<ResBody<{ status: string }>>('/api/auth/sms/', {
+  $fetch<ResBody<{ status: string }>>('https://api.cas.ziqiang.net.cn/auth/sms/', {
     method: 'POST',
     body: {
       phone: phone.value,

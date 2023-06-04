@@ -19,7 +19,7 @@ export async function request<T>(url: string, options: RequestOptions) {
   const router = useRouter();
   if (Date.now() > new Date(exp).getTime()) {
     try {
-      const res = await $fetch<ResBody<RefreshRes>>('/api/auth/refresh/', {
+      const res = await $fetch<ResBody<RefreshRes>>('https://api.cas.ziqiang.net.cn/auth/refresh/', {
         method: 'POST',
         body: {
           refresh,

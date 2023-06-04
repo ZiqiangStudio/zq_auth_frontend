@@ -28,6 +28,8 @@ const studentId = ref('');
 
 const route = useRoute();
 const id = route.query.id?.toString() ?? '';
+const appName = ref(route.query['app-name']?.toString() ?? '');
+const appLogo = ref(route.query['app-logo']?.toString() ?? '');
 
 const router = useRouter();
 
@@ -51,7 +53,7 @@ interface SendRes {
 function submit(e: Event) {
   e.preventDefault();
   if (id.length === 0) return;
-  request<ChangeRes>(`/api/users/${id}/`, {
+  request<ChangeRes>(`https://api.cas.ziqiang.net.cn/users/${id}/`, {
     method: 'PATCH',
     body: {
       name: name.value,
@@ -59,12 +61,12 @@ function submit(e: Event) {
     },
   })
     .then(() => {
-      return request<SendRes>(`/api/users/${id}/certify/`, {
+      return request<SendRes>(`https://api.cas.ziqiang.net.cn/users/${id}/certify/`, {
         method: 'POST',
       });
     })
     .then(() => {
-      router.push(`/certify-pending?id=${id}`);
+      router.push(`/certify-pending?id=${id}&app-name=${appName}&app-logo=${appLogo}`);
     })
     .catch((err) => {
       MMessage.error(err.data.msg);

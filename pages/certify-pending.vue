@@ -14,6 +14,8 @@ import MMessage from 'vue-m-message';
 
 const route = useRoute();
 const id = route.query.id?.toString() ?? '';
+const appName = ref(route.query['app-name']?.toString() ?? '');
+const appLogo = ref(route.query['app-logo']?.toString() ?? '');
 
 const image = isDark ? '/image/certify-pending-dark.svg' : '/image/certify-pending.svg';
 
@@ -36,14 +38,16 @@ interface CertifyRes {
   certify_time: string;
 }
 
+const router = useRouter();
+
 function submit(e: Event) {
   e.preventDefault();
-  request<CertifyRes>(`/api/users/${id}/certify/`, {
+  request<CertifyRes>(`https://api.cas.ziqiang.net.cn/users/${id}/certify/`, {
     method: 'GET',
   })
     .then((res) => {
       if (res.is_certified) {
-        location.href = '/login';
+        router.push(`/login?app-name=${appName}&app-logo=${appLogo}`);
       }
     })
     .catch((err) => {
@@ -59,7 +63,7 @@ interface SendRes {
 
 function resend(e: Event) {
   e.preventDefault();
-  request<SendRes>(`/api/users/${id}/certify/`, {
+  request<SendRes>(`https://api.cas.ziqiang.net.cn/users/${id}/certify/`, {
     method: 'POST',
   }).then(() => {
     resetTimeout();

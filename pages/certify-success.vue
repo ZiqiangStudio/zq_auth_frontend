@@ -7,13 +7,19 @@
     notice="你可以回到应用中继续注册流程"
     title-gap="15px"
   />
-  <page-header v-else-if="!isLoading" title="学生身份认证失败" notice="也许链接已经过期，你可以回到应用中重新发送邮件" />
+  <page-header
+    v-else-if="!isLoading"
+    title="学生身份认证失败"
+    notice="也许链接已经过期，你可以回到应用中重新发送邮件"
+  />
 </template>
 <script lang="ts" setup>
 import MMessage from 'vue-m-message';
 
 const route = useRoute();
 const code = route.query.code?.toString() ?? '';
+const appName = ref(route.query['app-name']?.toString() ?? '');
+const appLogo = ref(route.query['app-logo']?.toString() ?? '');
 
 const isSuccess = ref(false);
 const isLoading = ref(true);
@@ -28,7 +34,7 @@ function certify() {
     isLoading.value = false;
     return;
   }
-  $fetch<ResBody<CertifyRes>>(`/api/users/verify_callback/?code=${code}`, {
+  $fetch<ResBody<CertifyRes>>(`https://api.cas.ziqiang.net.cn/users/verify_callback/?code=${code}`, {
     method: 'GET',
   })
     .then((res) => {

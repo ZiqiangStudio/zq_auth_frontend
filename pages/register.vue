@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <page-header />
+    <page-header :app-logo="appLogo" />
     <form @submit="submit">
       <z-input
         v-model="username"
@@ -82,7 +82,10 @@
       <button class="submit">注册</button>
     </form>
     <p class="action">
-      已有账号？<nuxt-link to="/login"><strong>立即登录</strong></nuxt-link>
+      已有账号？
+      <nuxt-link :to="`/login?app-name=${appName}&app-logo=${appLogo}`">
+        <strong>立即登录</strong>
+      </nuxt-link>
     </p>
   </div>
 </template>
@@ -93,6 +96,10 @@ import Message from 'assets/icon/message.svg?component';
 import User from 'assets/icon/user.svg?component';
 import Phone from 'assets/icon/phone.svg?component';
 import MMessage from 'vue-m-message';
+
+const route = useRoute();
+const appName = ref(route.query['app-name']?.toString() ?? '');
+const appLogo = ref(route.query['app-logo']?.toString() ?? '');
 
 const username = ref('');
 const phone = ref('');
@@ -119,7 +126,7 @@ interface RegisterRes {
 
 function submit(e: Event) {
   e.preventDefault();
-  $fetch<ResBody<RegisterRes>>('/api/users/', {
+  $fetch<ResBody<RegisterRes>>('https://api.cas.ziqiang.net.cn/users/', {
     method: 'POST',
     body: {
       username: username.value,
@@ -132,10 +139,10 @@ function submit(e: Event) {
       localStorage.setItem('access', res.data.access);
       localStorage.setItem('exp', res.data.expire_time);
       localStorage.setItem('refresh', res.data.refresh);
-      router.push(`/certify?id=${res.data.id}`);
+      router.push(`/certify?id=${res.data.id}&app-name=${appName}&app-logo=${appLogo}`);
     })
     .catch((err) => {
-      MMessage.error(err.data.msg);
+      MMessage.error(err.data?.msg);
     });
 }
 
@@ -147,7 +154,7 @@ function sendMessage(e: Event) {
   if (!phoneInputRef.value) return;
   if (!phoneInputRef.value.reportValidity()) return;
   if (messageTimeout.value > 0) return;
-  $fetch<ResBody<{ status: string }>>('/api/auth/sms/', {
+  $fetch<ResBody<{ status: string }>>('https://api.cas.ziqiang.net.cn/auth/sms/', {
     method: 'POST',
     body: {
       phone: phone.value,
@@ -163,7 +170,7 @@ function sendMessage(e: Event) {
       }, 1000);
     })
     .catch((err) => {
-      MMessage.error(err.data.msg);
+      MMessage.error(err.data?.msg);
     });
 }
 

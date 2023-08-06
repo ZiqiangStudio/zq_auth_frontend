@@ -1,63 +1,73 @@
 <template>
   <page-back />
-  <page-header :image="image" title="忘记密码" notice="通过账号绑定的手机号找回密码" title-gap="30px" />
-  <form @submit="submit">
-    <z-input
-      ref="phoneInputRef"
-      v-model="phone"
-      label="手机号"
-      required
-      minlength="11"
-      maxlength="11"
-      type="tel"
-      pattern="[0-9]+"
-      placeholder="请输入手机号"
-    >
-      <template #prefix>
-        <Phone />
-      </template>
-    </z-input>
-    <z-input v-model="sms" maxlength="6" minlength="6" type="number" label="验证码" required placeholder="请输入验证码">
-      <template #prefix>
-        <Message />
-      </template>
-      <template #extra-input>
-        <button class="send" :disabled="messageTimeout > 0" @click="sendMessage">
-          {{ messageTimeout > 0 ? messageTimeout : '获取验证码' }}
-        </button>
-      </template>
-    </z-input>
-    <z-input
-      v-model="password"
-      maxlength="18"
-      minlength="6"
-      pattern="[a-zA-Z0-9_\-]+"
-      type="password"
-      label="新密码"
-      required
-      placeholder="请输入新密码"
-    >
-      <template #prefix>
-        <Lock />
-      </template>
-    </z-input>
-    <z-input
-      v-model="confirmedPassword"
-      label="确认密码"
-      maxlength="18"
-      minlength="6"
-      required
-      type="password"
-      pattern="[a-zA-Z0-9_\-]+"
-      placeholder="请再次输入新密码"
-      :custom-rule="confirmedPasswordRule"
-    >
-      <template #prefix>
-        <Lock />
-      </template>
-    </z-input>
-    <button class="submit">重置密码</button>
-  </form>
+  <div class="container">
+    <page-header :image="image" title="忘记密码" notice="通过账号绑定的手机号找回密码" title-gap="30px" />
+    <form @submit="submit">
+      <z-input
+        ref="phoneInputRef"
+        v-model="phone"
+        label="手机号"
+        required
+        minlength="11"
+        maxlength="11"
+        type="tel"
+        pattern="[0-9]+"
+        placeholder="请输入手机号"
+      >
+        <template #prefix>
+          <Phone />
+        </template>
+      </z-input>
+      <z-input
+        v-model="sms"
+        maxlength="6"
+        minlength="6"
+        type="number"
+        label="验证码"
+        required
+        placeholder="请输入验证码"
+      >
+        <template #prefix>
+          <Message />
+        </template>
+        <template #extra-input>
+          <button class="send" :disabled="messageTimeout > 0" @click="sendMessage">
+            {{ messageTimeout > 0 ? messageTimeout : '获取验证码' }}
+          </button>
+        </template>
+      </z-input>
+      <z-input
+        v-model="password"
+        maxlength="18"
+        minlength="6"
+        pattern="[a-zA-Z0-9_\-]+"
+        type="password"
+        label="新密码"
+        required
+        placeholder="请输入新密码"
+      >
+        <template #prefix>
+          <Lock />
+        </template>
+      </z-input>
+      <z-input
+        v-model="confirmedPassword"
+        label="确认密码"
+        maxlength="18"
+        minlength="6"
+        required
+        type="password"
+        pattern="[a-zA-Z0-9_\-]+"
+        placeholder="请再次输入新密码"
+        :custom-rule="confirmedPasswordRule"
+      >
+        <template #prefix>
+          <Lock />
+        </template>
+      </z-input>
+      <button class="submit">重置密码</button>
+    </form>
+  </div>
 </template>
 <script lang="ts" setup>
 import Lock from 'assets/icon/lock.svg?component';

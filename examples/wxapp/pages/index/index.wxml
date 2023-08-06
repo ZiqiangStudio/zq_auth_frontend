@@ -1,0 +1,5 @@
+<!--index.wxml-->
+<view class="container">
+  <text>自强 Auth 登录演示</text>
+  <button bind:tap="onLogin">登录</button>
+</view>

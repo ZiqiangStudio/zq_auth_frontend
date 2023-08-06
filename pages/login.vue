@@ -54,6 +54,8 @@ const route = useRoute();
 const appName = ref(route.query['app-name']?.toString() ?? '');
 const appLogo = ref(route.query['app-logo']?.toString() ?? '');
 
+const isWxapp = route.query['wxapp']?.toString() === 'true';
+
 interface LoginRes {
   id: number;
   username: string;
@@ -92,6 +94,14 @@ function submit(e: Event) {
           '*',
         );
         window.close();
+      } else if (isWxapp) {
+        wx.miniProgram.postMessage({
+          data: {
+            code: res.code,
+          },
+        });
+        /** 向小程序发送消息，会在以下特定时机触发组件的message事件：小程序后退、组件销毁、分享、复制链接 */
+        wx.miniProgram.navigateBack();
       }
     })
     .catch((err) => {

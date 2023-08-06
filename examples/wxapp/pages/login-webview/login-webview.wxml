@@ -1,0 +1,2 @@
+<!--pages/login-webview/login-webview.wxml-->
+<web-view src="{{ webviewSrc }}" bindmessage="onMessage" />

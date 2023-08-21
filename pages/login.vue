@@ -86,6 +86,7 @@ function submit(e: Event) {
       });
     })
     .then((res) => {
+      // eslint-disable-next-line no-undef
       if (process.client && window.opener) {
         window.opener.postMessage(
           {
@@ -95,12 +96,14 @@ function submit(e: Event) {
         );
         window.close();
       } else if (isWxapp) {
+        // eslint-disable-next-line no-undef
         wx.miniProgram.postMessage({
           data: {
             code: res.code,
           },
         });
         /** 向小程序发送消息，会在以下特定时机触发组件的message事件：小程序后退、组件销毁、分享、复制链接 */
+        // eslint-disable-next-line no-undef
         wx.miniProgram.navigateBack();
       }
     })

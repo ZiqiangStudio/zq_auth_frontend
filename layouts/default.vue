@@ -5,7 +5,6 @@
 </template>
 <style scoped lang="less">
 .container {
-  padding: 0 40px;
   box-sizing: border-box;
 }
 

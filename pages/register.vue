@@ -84,7 +84,10 @@
           <Lock />
         </template>
       </z-input>
-      <button class="submit">注册</button>
+      <button type="submit" class="submit">
+        <z-loading v-if="isLoading" />
+        注册<template v-if="isLoading">中...</template>
+      </button>
     </form>
     <p class="action">
       已有账号？
@@ -114,6 +117,8 @@ const confirmedPassword = ref('');
 
 const router = useRouter();
 
+const isLoading = ref(false);
+
 interface RegisterRes {
   id: number;
   username: string;
@@ -130,6 +135,8 @@ interface RegisterRes {
 }
 
 function submit(e: Event) {
+  if (isLoading.value) return;
+  isLoading.value = true;
   e.preventDefault();
   $fetch<ResBody<RegisterRes>>('https://api.cas.ziqiang.net.cn/users/', {
     method: 'POST',
@@ -148,6 +155,9 @@ function submit(e: Event) {
     })
     .catch((err) => {
       MMessage.error(err.data?.msg);
+    })
+    .finally(() => {
+      isLoading.value = false;
     });
 }
 

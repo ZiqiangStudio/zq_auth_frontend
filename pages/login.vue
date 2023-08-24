@@ -34,7 +34,10 @@
           <nuxt-link to="/reset">忘记密码？</nuxt-link>
         </template>
       </z-input>
-      <button>登录</button>
+      <button type="submit">
+        <z-loading v-if="isLoading" />
+        登录<template v-if="isLoading">中...</template>
+      </button>
     </form>
     <p class="action">
       还没有账号？
@@ -58,6 +61,8 @@ const appLogo = ref(route.query['app-logo']?.toString() ?? '');
 
 const isWxapp = route.query['wxapp']?.toString() === 'true';
 
+const isLoading = ref(false);
+
 interface LoginRes {
   id: number;
   username: string;
@@ -68,6 +73,8 @@ interface LoginRes {
 }
 
 function submit(e: Event) {
+  if (isLoading.value) return;
+  isLoading.value = true;
   $fetch<ResBody<LoginRes>>('https://api.cas.ziqiang.net.cn/auth/users/', {
     method: 'POST',
     body: {
@@ -110,6 +117,7 @@ function submit(e: Event) {
       }
     })
     .catch((err) => {
+      isLoading.value = false;
       console.error(err);
       MMessage.error(err.data.msg);
     });

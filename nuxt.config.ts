@@ -4,6 +4,14 @@ import svgLoader from 'vite-svg-loader';
 export default defineNuxtConfig({
   app: {
     head: {
+      title: '自强统一认证',
+      link: [
+        {
+          rel: 'icon',
+          type: 'image/svg+xml',
+          href: '/logo.svg',
+        },
+      ],
       script: [
         {
           src: 'https://res.wx.qq.com/open/js/jweixin-1.6.0.js',

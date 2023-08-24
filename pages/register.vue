@@ -9,6 +9,7 @@
         maxlength="16"
         minlength="4"
         pattern="[a-zA-Z0-9_\-]+"
+        title="只能包含英文大小写、数字、_和-"
         placeholder="请输入用户名"
         :custom-rule="usernameRule"
       >
@@ -25,6 +26,7 @@
         maxlength="11"
         type="tel"
         pattern="1[3-9]\d+"
+        title="请输入正确的11位手机号"
         placeholder="请输入手机号"
       >
         <template #prefix>
@@ -39,6 +41,7 @@
         type="number"
         required
         pattern="[0-9]+"
+        title="请输入正确的6位数字验证码"
         placeholder="请输入验证码"
       >
         <template #prefix>
@@ -58,6 +61,7 @@
         maxlength="18"
         minlength="6"
         pattern="[a-zA-Z0-9_\-]+"
+        title="只能包含英文大小写、数字、_和-"
         placeholder="请输入密码"
       >
         <template #prefix>
@@ -72,6 +76,7 @@
         maxlength="18"
         minlength="6"
         pattern="[a-zA-Z0-9_\-]+"
+        title="只能包含英文大小写、数字、_和-"
         placeholder="请再次输入密码"
         :custom-rule="confirmedPasswordRule"
       >

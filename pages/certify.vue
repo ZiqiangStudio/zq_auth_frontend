@@ -66,7 +66,7 @@ function submit(e: Event) {
       });
     })
     .then(() => {
-      router.push(`/certify-pending?id=${id}&app-name=${appName}&app-logo=${appLogo}`);
+      router.push(`/certify-pending?id=${id}&app-name=${appName}&app-logo=${appLogo}&student-id=${studentId.value}`);
     })
     .catch((err) => {
       MMessage.error(err.data.msg);

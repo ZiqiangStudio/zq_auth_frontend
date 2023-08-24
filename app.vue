@@ -13,7 +13,9 @@ import 'vue-m-message/dist/style.css';
 <style lang="less" scoped>
 .container {
   min-height: 100vh;
-  min-width: 100vw;
+  width: 100vw;
+  box-sizing: border-box;
+  padding: 0 40px;
   display: flex;
   justify-content: center;
   align-items: center;

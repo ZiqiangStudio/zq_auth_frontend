@@ -76,6 +76,9 @@ interface LoginRes {
 const loginRefCache = ref<LoginRes | null>(null);
 
 function getSsoCode() {
+  if (isLoading.value) return;
+  isLoading.value = true;
+
   return request<ResBody<{ code: string }>>('https://api.cas.ziqiang.net.cn/sso/code/', {
     method: 'POST',
     body: {
@@ -83,6 +86,7 @@ function getSsoCode() {
     },
   })
     .then((res) => {
+      isLoading.value = false;
       // eslint-disable-next-line no-undef
       if (process.client && window.opener) {
         window.opener.postMessage(

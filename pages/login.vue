@@ -55,6 +55,7 @@ import MMessage from 'vue-m-message';
 const username = ref('');
 const password = ref('');
 
+const router = useRouter();
 const route = useRoute();
 const appName = ref(route.query['app-name']?.toString() ?? '');
 const appLogo = ref(route.query['app-logo']?.toString() ?? '');
@@ -72,6 +73,8 @@ interface LoginRes {
   refresh: string;
 }
 
+const loginRefCache = ref<LoginRes | null>(null);
+
 function submit(e: Event) {
   if (isLoading.value) return;
   isLoading.value = true;
@@ -83,6 +86,8 @@ function submit(e: Event) {
     },
   })
     .then((res) => {
+      loginRefCache.value = res.data;
+
       localStorage.setItem('access', res.data.access);
       localStorage.setItem('exp', res.data.expire_time);
       localStorage.setItem('refresh', res.data.refresh);
@@ -118,6 +123,14 @@ function submit(e: Event) {
     })
     .catch((err) => {
       isLoading.value = false;
+      if ('data' in err && typeof err.data === 'object' && 'code' in err.data && typeof err.data.code === 'string') {
+        /** A0311：用户未激活，邮箱认证未通过，需要重新校验 */
+        if (err.data.code === 'A0311' && typeof loginRefCache.value?.id === 'number') {
+          MMessage.error('登录需要验证学生身份，请重新验证');
+          router.push(`/certify?id=${loginRefCache.value.id}&app-name=${appName}&app-logo=${appLogo}`);
+          return;
+        }
+      }
       console.error(err);
       MMessage.error(err.data.msg);
     });

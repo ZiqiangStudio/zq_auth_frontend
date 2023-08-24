@@ -15,7 +15,7 @@
           :maxlength="maxlength"
           :minlength="minlength"
           :pattern="pattern"
-          :title="title"
+          :title="requirement"
           @input="onChange"
         />
         <div class="icon">
@@ -62,7 +62,7 @@ const props = defineProps({
     type: String,
     required: false,
   },
-  title: {
+  requirement: {
     type: String,
     required: false,
   },

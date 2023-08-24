@@ -1,5 +1,5 @@
 <template>
-  <page-header v-if="isLoading" title="正在认证学生身份" notice="请耐心等待，这个时间不会持续太长" />
+  <page-header v-if="isLoading && !isSuccess" title="正在认证学生身份" notice="请耐心等待，这个时间不会持续太长" />
   <page-header
     v-if="isSuccess"
     :image="image"

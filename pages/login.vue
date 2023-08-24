@@ -75,30 +75,13 @@ interface LoginRes {
 
 const loginRefCache = ref<LoginRes | null>(null);
 
-function submit(e: Event) {
-  if (isLoading.value) return;
-  isLoading.value = true;
-  $fetch<ResBody<LoginRes>>('https://api.cas.ziqiang.net.cn/auth/users/', {
+function getSsoCode() {
+  return request<ResBody<{ code: string }>>('https://api.cas.ziqiang.net.cn/sso/code/', {
     method: 'POST',
     body: {
-      username: username.value,
-      password: password.value,
+      app: appName.value,
     },
   })
-    .then((res) => {
-      loginRefCache.value = res.data;
-
-      localStorage.setItem('access', res.data.access);
-      localStorage.setItem('exp', res.data.expire_time);
-      localStorage.setItem('refresh', res.data.refresh);
-
-      return request<ResBody<{ code: string }>>('https://api.cas.ziqiang.net.cn/sso/code/', {
-        method: 'POST',
-        body: {
-          app: appName.value,
-        },
-      });
-    })
     .then((res) => {
       // eslint-disable-next-line no-undef
       if (process.client && window.opener) {
@@ -119,6 +102,8 @@ function submit(e: Event) {
         /** 向小程序发送消息，会在以下特定时机触发组件的message事件：小程序后退、组件销毁、分享、复制链接 */
         // eslint-disable-next-line no-undef
         wx.miniProgram.navigateBack();
+      } else {
+        MMessage.error('无法回到应用中，请退出页面重新进入');
       }
     })
     .catch((err) => {
@@ -134,6 +119,35 @@ function submit(e: Event) {
       console.error(err);
       MMessage.error(err.data.msg);
     });
+}
+
+onMounted(() => {
+  if (appName.value.length === 0 || appLogo.value.length === 0) {
+    MMessage.error('参数错误无法正常登录，请退出页面重新进入');
+  }
+  if (typeof localStorage.getItem('access') === 'string') {
+    getSsoCode();
+  }
+});
+
+function submit(e: Event) {
+  if (isLoading.value) return;
+  isLoading.value = true;
+  $fetch<ResBody<LoginRes>>('https://api.cas.ziqiang.net.cn/auth/users/', {
+    method: 'POST',
+    body: {
+      username: username.value,
+      password: password.value,
+    },
+  }).then((res) => {
+    loginRefCache.value = res.data;
+
+    localStorage.setItem('access', res.data.access);
+    localStorage.setItem('exp', res.data.expire_time);
+    localStorage.setItem('refresh', res.data.refresh);
+
+    return getSsoCode();
+  });
   e.preventDefault();
 }
 </script>

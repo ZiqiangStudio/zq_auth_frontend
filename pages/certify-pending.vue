@@ -1,6 +1,6 @@
 <template>
   <page-back />
-  <page-header :image="image" title="验证邮件已发送" notice="验证邮件已发送至2019301040084@whu.edu.cn" />
+  <page-header :image="image" title="验证邮件已发送" :notice="`验证邮件已发送至${studentId}@whu.edu.cn`" />
   <form @submit="submit">
     <button>已在邮箱中完成验证</button>
     <button class="resend" :disabled="messageTimeout > 0" @click="resend">
@@ -16,6 +16,7 @@ const route = useRoute();
 const id = route.query.id?.toString() ?? '';
 const appName = ref(route.query['app-name']?.toString() ?? '');
 const appLogo = ref(route.query['app-logo']?.toString() ?? '');
+const studentId = ref(route.query['student-id']?.toString() ?? '');
 
 const image = isDark ? '/image/certify-pending-dark.svg' : '/image/certify-pending.svg';
 

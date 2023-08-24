@@ -15,6 +15,7 @@
           :maxlength="maxlength"
           :minlength="minlength"
           :pattern="pattern"
+          :title="title"
           @input="onChange"
         />
         <div class="icon">
@@ -58,6 +59,10 @@ const props = defineProps({
     required: false,
   },
   pattern: {
+    type: String,
+    required: false,
+  },
+  title: {
     type: String,
     required: false,
   },

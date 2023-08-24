@@ -7,6 +7,7 @@
         maxlength="16"
         minlength="4"
         pattern="[a-zA-Z0-9_\-]+"
+        title="只能包含英文大小写、数字、_和-"
         label="用户名/手机号/学号"
         required
         placeholder="请输入用户名"
@@ -21,6 +22,7 @@
         maxlength="18"
         minlength="6"
         pattern="[a-zA-Z0-9_\-]+"
+        title="只能包含英文大小写、数字、_和-"
         type="password"
         required
         placeholder="请输入密码"

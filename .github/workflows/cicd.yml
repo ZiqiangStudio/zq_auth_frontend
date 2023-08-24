@@ -1,0 +1,53 @@
+name: Aliyun OSS CI/CD
+
+on:
+  push:
+    branches: ["master"]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.2.4
+        with:
+          version: 7.25.0
+          run_install: true
+
+      - name: Code lint
+        run: pnpm lint
+
+      - name: Build (Generate static files)
+        run: pnpm generate
+
+      - name: Setup aliyun OSS
+        uses: yizhoumo/setup-ossutil@v1
+        with:
+          endpoint: oss-cn-hangzhou.aliyuncs.com
+          access-key-id: ${{ secrets.ALI_KEY_ID }}
+          access-key-secret: ${{ secrets.ALI_KEY_SECRET }}
+      
+      - name: Upload files to OSS
+        run: |
+          ossutil rm -f oss://zq-auth-v2/ -r
+          ossutil cp -rf dist oss://zq-auth-v2/
+
+      - name: Refresh CDN
+        uses: visionwx/ali-cdn-refresh@v0.1.1
+        with:
+            accessKeyId: ${{ secrets.ALI_KEY_ID }}
+            accessKeySecret: ${{ secrets.ALI_KEY_SECRET }}
+            type: Directory
+            path: https://cas.ziqiang.net.cn/
+        

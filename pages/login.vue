@@ -41,7 +41,7 @@
     </form>
     <p class="action">
       还没有账号？
-      <nuxt-link :to="`/register?app-name=${appName}&app-logo=${appLogo}`">
+      <nuxt-link to="/register">
         <strong>立即注册</strong>
       </nuxt-link>
     </p>
@@ -57,10 +57,10 @@ const password = ref('');
 
 const router = useRouter();
 const route = useRoute();
-const appName = ref(route.query['app-name']?.toString() ?? sessionStorage.getItem('app-name') ?? '');
-const appLogo = ref(route.query['app-logo']?.toString() ?? sessionStorage.getItem('app-logo') ?? '');
+const appName = ref('');
+const appLogo = ref('');
 
-const isWxapp = route.query['wxapp']?.toString() === 'true' || sessionStorage.getItem('wxapp') === 'true';
+let isWxapp = false;
 
 const isLoading = ref(false);
 
@@ -108,11 +108,13 @@ function getSsoCodeRequest() {
 }
 
 onMounted(() => {
+  appName.value = route.query['app-name']?.toString() ?? sessionStorage.getItem('app-name') ?? '';
+  appLogo.value = route.query['app-logo']?.toString() ?? sessionStorage.getItem('app-logo') ?? '';
+  isWxapp = route.query['wxapp']?.toString() === 'true' || sessionStorage.getItem('wxapp') === 'true';
   if (appName.value.length === 0) {
     MMessage.error('参数错误无法正常登录，请退出页面重新进入');
     return;
   }
-
   // 储存应用信息
   if (sessionStorage.getItem('app-name') !== appName.value) {
     sessionStorage.setItem('wxapp', isWxapp.toString());
@@ -177,7 +179,7 @@ function submit(e: Event) {
         }
       }
       console.error(err);
-      MMessage.error(err.data.msg);
+      MMessage.error((err.data && err.data.msg) || err.message);
     });
 }
 </script>

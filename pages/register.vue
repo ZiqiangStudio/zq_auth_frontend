@@ -91,7 +91,7 @@
     </form>
     <p class="action">
       已有账号？
-      <nuxt-link :to="`/login?app-name=${appName}&app-logo=${appLogo}`">
+      <nuxt-link to="/login">
         <strong>立即登录</strong>
       </nuxt-link>
     </p>
@@ -106,8 +106,7 @@ import Phone from 'assets/icon/phone.svg?component';
 import MMessage from 'vue-m-message';
 
 const route = useRoute();
-const appName = ref(route.query['app-name']?.toString() ?? sessionStorage.getItem('app-name') ?? '');
-const appLogo = ref(route.query['app-logo']?.toString() ?? sessionStorage.getItem('app-logo') ?? '');
+const appLogo = ref('');
 
 const username = ref('');
 const phone = ref('');
@@ -133,6 +132,10 @@ interface RegisterRes {
   access: string;
   refresh: string;
 }
+
+onMounted(() => {
+  appLogo.value = route.query['app-logo']?.toString() ?? sessionStorage.getItem('app-logo') ?? '';
+});
 
 function submit(e: Event) {
   if (isLoading.value) return;
@@ -175,7 +178,7 @@ function sendMessage(e: Event) {
       phone: phone.value,
     },
   })
-    .then((res) => {
+    .then(() => {
       messageTimeout.value = 60;
       intervalId = setInterval(() => {
         messageTimeout.value -= 1;
@@ -185,7 +188,7 @@ function sendMessage(e: Event) {
       }, 1000);
     })
     .catch((err) => {
-      MMessage.error(err.data?.msg);
+      MMessage.error((err.data && err.data.msg) || err.message);
     });
 }
 

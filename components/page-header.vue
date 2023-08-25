@@ -12,14 +12,17 @@ defineProps({
   appLogo: {
     type: String,
     required: false,
+    default: '',
   },
   image: {
     type: String,
     required: false,
+    default: '',
   },
   title: {
     type: String,
     required: false,
+    default: '',
   },
   notice: {
     type: String,

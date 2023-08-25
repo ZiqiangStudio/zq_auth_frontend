@@ -106,8 +106,8 @@ import Phone from 'assets/icon/phone.svg?component';
 import MMessage from 'vue-m-message';
 
 const route = useRoute();
-const appName = ref(route.query['app-name']?.toString() ?? '');
-const appLogo = ref(route.query['app-logo']?.toString() ?? '');
+const appName = ref(route.query['app-name']?.toString() ?? sessionStorage.getItem('app-name') ?? '');
+const appLogo = ref(route.query['app-logo']?.toString() ?? sessionStorage.getItem('app-logo') ?? '');
 
 const username = ref('');
 const phone = ref('');
@@ -151,7 +151,7 @@ function submit(e: Event) {
       localStorage.setItem('access', res.data.access);
       localStorage.setItem('exp', res.data.expire_time);
       localStorage.setItem('refresh', res.data.refresh);
-      router.push(`/certify?id=${res.data.id}&app-name=${appName}&app-logo=${appLogo}`);
+      router.push(`/certify?id=${res.data.id}`);
     })
     .catch((err) => {
       MMessage.error(err.data?.msg);

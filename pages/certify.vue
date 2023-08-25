@@ -28,8 +28,8 @@ const studentId = ref('');
 
 const route = useRoute();
 const id = route.query.id?.toString() ?? '';
-const appName = ref(route.query['app-name']?.toString() ?? '');
-const appLogo = ref(route.query['app-logo']?.toString() ?? '');
+const appName = route.query['app-name']?.toString() ?? '';
+const appLogo = route.query['app-logo']?.toString() ?? '';
 
 const router = useRouter();
 

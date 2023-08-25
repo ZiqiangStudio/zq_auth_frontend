@@ -1,5 +1,5 @@
 <template>
-  <page-header v-if="isLoading && !isSuccess" title="正在认证学生身份" notice="请耐心等待，这个时间不会持续太长" />
+  <page-header v-if="isLoading" title="正在认证学生身份" notice="请耐心等待，这个时间不会持续太长" />
   <page-header
     v-if="isSuccess"
     :image="image"
@@ -39,6 +39,7 @@ function certify() {
   })
     .then((res) => {
       isSuccess.value = res.data.is_certified;
+      isLoading.value = false;
     })
     .catch((err) => {
       MMessage.error(`${err.data.msg} 正在重试`);

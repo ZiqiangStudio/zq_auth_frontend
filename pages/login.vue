@@ -79,36 +79,9 @@ function getSsoCode() {
   if (isLoading.value) return;
   isLoading.value = true;
 
-  return request<ResBody<{ code: string }>>('https://api.cas.ziqiang.net.cn/sso/code/', {
-    method: 'POST',
-    body: {
-      app: appName.value,
-    },
-  })
-    .then((res) => {
+  getSsoCodeRequest()
+    .then(() => {
       isLoading.value = false;
-      // eslint-disable-next-line no-undef
-      if (process.client && window.opener) {
-        window.opener.postMessage(
-          {
-            code: res.code,
-          },
-          '*',
-        );
-        window.close();
-      } else if (isWxapp) {
-        // eslint-disable-next-line no-undef
-        wx.miniProgram.postMessage({
-          data: {
-            code: res.code,
-          },
-        });
-        /** 向小程序发送消息，会在以下特定时机触发组件的message事件：小程序后退、组件销毁、分享、复制链接 */
-        // eslint-disable-next-line no-undef
-        wx.miniProgram.navigateBack();
-      } else {
-        MMessage.error('无法回到应用中，请退出页面重新进入');
-      }
     })
     .catch((err) => {
       isLoading.value = false;
@@ -125,9 +98,42 @@ function getSsoCode() {
     });
 }
 
+function getSsoCodeRequest() {
+  return request<ResBody<{ code: string }>>('https://api.cas.ziqiang.net.cn/sso/code/', {
+    method: 'POST',
+    body: {
+      app: appName.value,
+    },
+  }).then((res) => {
+    // eslint-disable-next-line no-undef
+    if (process.client && window.opener) {
+      window.opener.postMessage(
+        {
+          code: res.code,
+        },
+        '*',
+      );
+      window.close();
+    } else if (isWxapp) {
+      // eslint-disable-next-line no-undef
+      wx.miniProgram.postMessage({
+        data: {
+          code: res.code,
+        },
+      });
+      /** 向小程序发送消息，会在以下特定时机触发组件的message事件：小程序后退、组件销毁、分享、复制链接 */
+      // eslint-disable-next-line no-undef
+      wx.miniProgram.navigateBack();
+    } else {
+      MMessage.error('无法回到应用中，请退出页面重新进入');
+    }
+  });
+}
+
 onMounted(() => {
-  if (appName.value.length === 0 || appLogo.value.length === 0) {
+  if (appName.value.length === 0) {
     MMessage.error('参数错误无法正常登录，请退出页面重新进入');
+    return;
   }
   if (typeof localStorage.getItem('access') === 'string') {
     getSsoCode();
@@ -135,24 +141,48 @@ onMounted(() => {
 });
 
 function submit(e: Event) {
+  e.preventDefault();
+
+  if (appName.value.length === 0) {
+    MMessage.error('参数错误无法正常登录，请退出页面重新进入');
+    return;
+  }
+
   if (isLoading.value) return;
   isLoading.value = true;
+
   $fetch<ResBody<LoginRes>>('https://api.cas.ziqiang.net.cn/auth/users/', {
     method: 'POST',
     body: {
       username: username.value,
       password: password.value,
     },
-  }).then((res) => {
-    loginRefCache.value = res.data;
+  })
+    .then((res) => {
+      loginRefCache.value = res.data;
 
-    localStorage.setItem('access', res.data.access);
-    localStorage.setItem('exp', res.data.expire_time);
-    localStorage.setItem('refresh', res.data.refresh);
+      localStorage.setItem('access', res.data.access);
+      localStorage.setItem('exp', res.data.expire_time);
+      localStorage.setItem('refresh', res.data.refresh);
 
-    return getSsoCode();
-  });
-  e.preventDefault();
+      return getSsoCodeRequest();
+    })
+    .then(() => {
+      isLoading.value = false;
+    })
+    .catch((err) => {
+      isLoading.value = false;
+      if ('data' in err && typeof err.data === 'object' && 'code' in err.data && typeof err.data.code === 'string') {
+        /** A0311：用户未激活，邮箱认证未通过，需要重新校验 */
+        if (err.data.code === 'A0311' && typeof loginRefCache.value?.id === 'number') {
+          MMessage.error('登录需要验证学生身份，请重新验证');
+          router.push(`/certify?id=${loginRefCache.value.id}&app-name=${appName}&app-logo=${appLogo}`);
+          return;
+        }
+      }
+      console.error(err);
+      MMessage.error(err.data.msg);
+    });
 }
 </script>
 <style lang="less" scoped>

@@ -13,7 +13,7 @@
       </template>
     </z-input>
     <button type="submit">发送验证邮件</button>
-    <button class="skip" @click="confirmSkip">跳过</button>
+    <button :disabled="isCertifyOnly" class="skip" @click="confirmSkip">跳过</button>
   </form>
   <p class="action"><nuxt-link to="/register">无法访问武大邮箱？</nuxt-link></p>
 </template>
@@ -31,6 +31,12 @@ const route = useRoute();
 const id = route.query.id?.toString() ?? '';
 
 const router = useRouter();
+
+const isCertifyOnly = ref(false);
+
+onMounted(() => {
+  isCertifyOnly.value = sessionStorage.getItem('certify-only') === 'true';
+});
 
 interface ChangeRes {
   id: number;
@@ -52,7 +58,7 @@ interface SendRes {
 function submit(e: Event) {
   e.preventDefault();
   if (id.length === 0) return;
-  request<ChangeRes>(`https://api.cas.ziqiang.net.cn/users/${id}/`, {
+  request<ChangeRes>(`/users/${id}/`, {
     method: 'PATCH',
     body: {
       name: name.value,
@@ -60,7 +66,7 @@ function submit(e: Event) {
     },
   })
     .then(() => {
-      return request<SendRes>(`https://api.cas.ziqiang.net.cn/users/${id}/certify/`, {
+      return request<SendRes>(`/users/${id}/certify/`, {
         method: 'POST',
       });
     })
@@ -102,5 +108,10 @@ form button:first-of-type {
   background-color: var(--color-button-secondary-bg);
   color: var(--color-primary);
   transition: color, background-color 0.3s;
+
+  &[disabled] {
+    color: var(--color-disabled);
+    background-color: var(--color-disabled-bg);
+  }
 }
 </style>

@@ -11,10 +11,16 @@
 </template>
 <script lang="ts" setup>
 import MMessage from 'vue-m-message';
+import { callback } from '@/utils/callback';
 
 const route = useRoute();
 const id = route.query.id?.toString() ?? '';
 const studentId = ref(route.query['student-id']?.toString() ?? '');
+
+let isCertifyOnly = false;
+onMounted(() => {
+  isCertifyOnly = sessionStorage.getItem('certify-only') === 'true';
+});
 
 const image = isDark ? '/image/certify-pending-dark.svg' : '/image/certify-pending.svg';
 
@@ -41,12 +47,18 @@ const router = useRouter();
 
 function submit(e: Event) {
   e.preventDefault();
-  request<CertifyRes>(`https://api.cas.ziqiang.net.cn/users/${id}/certify/`, {
+  request<CertifyRes>(`/users/${id}/certify/`, {
     method: 'GET',
   })
     .then((res) => {
       if (res.is_certified) {
-        router.replace(`/login`);
+        if (isCertifyOnly) {
+          callback({
+            is_certified: res.is_certified,
+          });
+        } else {
+          router.replace('/login');
+        }
       } else {
         MMessage.error('学生身份认证状态未更新，请确认已在邮箱中完成验证');
       }
@@ -64,7 +76,7 @@ interface SendRes {
 
 function resend(e: Event) {
   e.preventDefault();
-  request<SendRes>(`https://api.cas.ziqiang.net.cn/users/${id}/certify/`, {
+  request<SendRes>(`/users/${id}/certify/`, {
     method: 'POST',
   }).then(() => {
     resetTimeout();

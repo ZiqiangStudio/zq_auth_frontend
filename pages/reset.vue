@@ -74,6 +74,8 @@ import Lock from 'assets/icon/lock.svg?component';
 import Message from 'assets/icon/message.svg?component';
 import Phone from 'assets/icon/phone.svg?component';
 import MMessage from 'vue-m-message';
+import { API_PREFIX } from '@/utils/request';
+import { ResBody } from '@/utils/types';
 
 const router = useRouter();
 
@@ -110,7 +112,7 @@ function sendMessage(e: Event) {
   if (!phoneInputRef.value) return;
   if (!phoneInputRef.value.reportValidity()) return;
   if (messageTimeout.value > 0) return;
-  $fetch<ResBody<{ status: string }>>('https://api.cas.ziqiang.net.cn/auth/sms/', {
+  $fetch<ResBody<{ status: string }>>(`${API_PREFIX}/auth/sms/`, {
     method: 'POST',
     body: {
       phone: phone.value,
@@ -118,12 +120,14 @@ function sendMessage(e: Event) {
   })
     .then(() => {
       messageTimeout.value = 60;
-      intervalId = setInterval(() => {
-        messageTimeout.value -= 1;
-        if (messageTimeout.value === 0) {
-          clearInterval(intervalId);
-        }
-      }, 1000);
+      intervalId = Number(
+        setInterval(() => {
+          messageTimeout.value -= 1;
+          if (messageTimeout.value === 0) {
+            clearInterval(intervalId);
+          }
+        }, 1000),
+      );
     })
     .catch((err) => {
       MMessage.error(err.data.msg);

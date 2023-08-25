@@ -4,18 +4,12 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:vue/vue3-recommended',
     'plugin:prettier/recommended',
-      
   ],
   parser: 'vue-eslint-parser',
   parserOptions: {
     parser: '@typescript-eslint/parser',
   },
-  ignorePatterns: [
-    'node_modules/*',
-    'dist/*',
-    '.nuxt/*',
-    '.output/*',
-  ],
+  ignorePatterns: ['node_modules/*', 'dist/*', '.nuxt/*', '.output/*'],
   rules: {
     'vue/multi-word-component-names': 1,
   },
@@ -136,5 +130,8 @@ module.exports = {
     definePageMeta: true,
     $fetch: true,
     ResBody: true,
+    wx: true,
+    process: true,
+    module: true,
   },
 };

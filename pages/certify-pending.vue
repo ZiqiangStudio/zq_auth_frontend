@@ -7,11 +7,12 @@
       重新发送邮件{{ messageTimeout > 0 ? ` (${messageTimeout})` : '' }}
     </button>
   </form>
-  <p class="action"><nuxt-link to="/register">无法访问武大邮箱？</nuxt-link></p>
+  <p class="action" @click="handleHelp"><a>无法访问武大邮箱？</a></p>
 </template>
 <script lang="ts" setup>
 import MMessage from 'vue-m-message';
 import { callback } from '@/utils/callback';
+import { WHU_MAIL } from '@/constants/url';
 
 const route = useRoute();
 const id = route.query.id?.toString() ?? '';
@@ -84,6 +85,12 @@ function resend(e: Event) {
     resetTimeout();
   });
 }
+
+function handleHelp() {
+  if (confirm('即将打开武汉大学邮箱。新生邮箱一般用户名为学号，密码为身份证后六位')) {
+    window.open(WHU_MAIL);
+  }
+}
 </script>
 <style scoped lang="less">
 form {
@@ -109,5 +116,6 @@ form {
   text-align: center;
   font-size: 14px;
   margin-top: 10px;
+  cursor: pointer;
 }
 </style>

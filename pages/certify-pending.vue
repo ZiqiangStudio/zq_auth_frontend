@@ -54,7 +54,7 @@ function submit(e: Event) {
       if (res.is_certified) {
         if (isCertifyOnly) {
           callback({
-            isCertified: res.is_certified,
+            is_certified: res.is_certified,
           });
         } else {
           router.replace('/login');

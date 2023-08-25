@@ -98,7 +98,7 @@ function handleCertifyOnly() {
   }).then((res) => {
     if (res.is_certified) {
       callback({
-        isCertified: res.is_certified,
+        is_certified: res.is_certified,
       });
       return;
     } else if (res) {
@@ -186,7 +186,7 @@ function submit(e: Event) {
       if (isCertifyOnly) {
         if (res.data.is_certified) {
           callback({
-            isCertified: res.data.is_certified,
+            is_certified: res.data.is_certified,
           });
           return;
         } else {

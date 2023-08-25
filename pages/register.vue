@@ -104,6 +104,8 @@ import Message from 'assets/icon/message.svg?component';
 import User from 'assets/icon/user.svg?component';
 import Phone from 'assets/icon/phone.svg?component';
 import MMessage from 'vue-m-message';
+import { ResBody } from '@/utils/types';
+import { API_PREFIX } from '@/utils/request';
 
 const route = useRoute();
 const appLogo = ref('');
@@ -141,7 +143,7 @@ function submit(e: Event) {
   if (isLoading.value) return;
   isLoading.value = true;
   e.preventDefault();
-  $fetch<ResBody<RegisterRes>>('https://api.cas.ziqiang.net.cn/users/', {
+  $fetch<ResBody<RegisterRes>>(`${API_PREFIX}/users/`, {
     method: 'POST',
     body: {
       username: username.value,
@@ -172,7 +174,7 @@ function sendMessage(e: Event) {
   if (!phoneInputRef.value) return;
   if (!phoneInputRef.value.reportValidity()) return;
   if (messageTimeout.value > 0) return;
-  $fetch<ResBody<{ status: string }>>('https://api.cas.ziqiang.net.cn/auth/sms/', {
+  $fetch<ResBody<{ status: string }>>(`${API_PREFIX}/auth/sms/`, {
     method: 'POST',
     body: {
       phone: phone.value,
@@ -180,12 +182,14 @@ function sendMessage(e: Event) {
   })
     .then(() => {
       messageTimeout.value = 60;
-      intervalId = setInterval(() => {
-        messageTimeout.value -= 1;
-        if (messageTimeout.value === 0) {
-          clearInterval(intervalId);
-        }
-      }, 1000);
+      intervalId = Number(
+        setInterval(() => {
+          messageTimeout.value -= 1;
+          if (messageTimeout.value === 0) {
+            clearInterval(intervalId);
+          }
+        }, 1000),
+      );
     })
     .catch((err) => {
       MMessage.error((err.data && err.data.msg) || err.message);

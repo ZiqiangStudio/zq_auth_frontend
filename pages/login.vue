@@ -51,6 +51,9 @@
 import User from 'assets/icon/user.svg?component';
 import Lock from 'assets/icon/lock.svg?component';
 import MMessage from 'vue-m-message';
+import { callback } from '@/utils/callback';
+import { ResBody } from '@/utils/types';
+import { API_PREFIX } from '@/utils/request';
 
 const username = ref('');
 const password = ref('');
@@ -61,6 +64,7 @@ const appName = ref('');
 const appLogo = ref('');
 
 let isWxapp = false;
+let isCertifyOnly = false;
 
 const isLoading = ref(false);
 
@@ -76,33 +80,29 @@ interface LoginRes {
 const loginRefCache = ref<LoginRes | null>(null);
 
 function getSsoCodeRequest() {
-  return request<ResBody<{ code: string }>>('https://api.cas.ziqiang.net.cn/sso/code/', {
+  return request<{ code: string }>('/sso/code/', {
     method: 'POST',
     body: {
       app: appName.value,
     },
   }).then((res) => {
-    // eslint-disable-next-line no-undef
-    if (process.client && window.opener) {
-      window.opener.postMessage(
-        {
-          code: res.code,
-        },
-        '*',
-      );
-      window.close();
-    } else if (isWxapp) {
-      // eslint-disable-next-line no-undef
-      wx.miniProgram.postMessage({
-        data: {
-          code: res.code,
-        },
+    callback({
+      code: res.code,
+    });
+  });
+}
+
+function handleCertifyOnly() {
+  return request<LoginRes>('/users/', {
+    method: 'GET',
+  }).then((res) => {
+    if (res.is_certified) {
+      callback({
+        isCertified: res.is_certified,
       });
-      /** 向小程序发送消息，会在以下特定时机触发组件的message事件：小程序后退、组件销毁、分享、复制链接 */
-      // eslint-disable-next-line no-undef
-      wx.miniProgram.navigateBack();
-    } else {
-      MMessage.error('无法回到应用中，请退出页面重新进入');
+      return;
+    } else if (res) {
+      router.push(`/certify?id=${res.id}&app-name=${appName}&app-logo=${appLogo}`);
     }
   });
 }
@@ -111,30 +111,50 @@ onMounted(() => {
   appName.value = route.query['app-name']?.toString() ?? sessionStorage.getItem('app-name') ?? '';
   appLogo.value = route.query['app-logo']?.toString() ?? sessionStorage.getItem('app-logo') ?? '';
   isWxapp = route.query['wxapp']?.toString() === 'true' || sessionStorage.getItem('wxapp') === 'true';
+  isCertifyOnly = route.query['certify-only']?.toString() === 'true';
+
   if (appName.value.length === 0) {
     MMessage.error('参数错误无法正常登录，请退出页面重新进入');
     return;
   }
+
   // 储存应用信息
   if (sessionStorage.getItem('app-name') !== appName.value) {
     sessionStorage.setItem('wxapp', isWxapp.toString());
     sessionStorage.setItem('app-name', appName.value);
     sessionStorage.setItem('app-logo', appLogo.value);
+    sessionStorage.setItem('certify-only', isCertifyOnly.toString());
   }
 
-  // 自动登录
+  /**
+   * 自动登录，当仅验证学生时，获取用户信息并返回
+   */
   if (typeof localStorage.getItem('access') === 'string' && !isLoading.value) {
     isLoading.value = true;
-    getSsoCodeRequest()
-      .catch((err) => {
-        console.warn('自动登录失败', err);
-        localStorage.removeItem('access');
-        localStorage.removeItem('exp');
-        localStorage.removeItem('refresh');
-      })
-      .finally(() => {
-        isLoading.value = false;
-      });
+
+    if (isCertifyOnly) {
+      handleCertifyOnly()
+        .catch((err) => {
+          console.warn('自动登录失败', err);
+          localStorage.removeItem('access');
+          localStorage.removeItem('exp');
+          localStorage.removeItem('refresh');
+        })
+        .finally(() => {
+          isLoading.value = false;
+        });
+    } else {
+      getSsoCodeRequest()
+        .catch((err) => {
+          console.warn('自动登录失败', err);
+          localStorage.removeItem('access');
+          localStorage.removeItem('exp');
+          localStorage.removeItem('refresh');
+        })
+        .finally(() => {
+          isLoading.value = false;
+        });
+    }
   }
 });
 
@@ -149,7 +169,7 @@ function submit(e: Event) {
   if (isLoading.value) return;
   isLoading.value = true;
 
-  $fetch<ResBody<LoginRes>>('https://api.cas.ziqiang.net.cn/auth/users/', {
+  $fetch<ResBody<LoginRes>>(`${API_PREFIX}/auth/users/`, {
     method: 'POST',
     body: {
       username: username.value,
@@ -163,6 +183,18 @@ function submit(e: Event) {
       localStorage.setItem('exp', res.data.expire_time);
       localStorage.setItem('refresh', res.data.refresh);
 
+      if (isCertifyOnly) {
+        if (res.data.is_certified) {
+          callback({
+            isCertified: res.data.is_certified,
+          });
+          return;
+        } else {
+          router.push(`/certify?id=${loginRefCache.value.id}`);
+          return;
+        }
+      }
+
       return getSsoCodeRequest();
     })
     .then(() => {
@@ -174,7 +206,7 @@ function submit(e: Event) {
         /** A0311：用户未激活，邮箱认证未通过，需要重新校验 */
         if (err.data.code === 'A0311' && typeof loginRefCache.value?.id === 'number') {
           MMessage.error('登录需要验证学生身份，请重新验证');
-          router.push(`/certify?id=${loginRefCache.value.id}&app-name=${appName}&app-logo=${appLogo}`);
+          router.push(`/certify?id=${loginRefCache.value.id}`);
           return;
         }
       }

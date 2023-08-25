@@ -15,6 +15,8 @@
 </template>
 <script lang="ts" setup>
 import MMessage from 'vue-m-message';
+import { ResBody } from '@/utils/types';
+import { API_PREFIX } from '@/utils/request';
 
 const route = useRoute();
 const code = route.query.code?.toString() ?? '';
@@ -32,7 +34,7 @@ function certify() {
     isLoading.value = false;
     return;
   }
-  $fetch<ResBody<CertifyRes>>(`https://api.cas.ziqiang.net.cn/users/verify_callback/?code=${code}`, {
+  $fetch<ResBody<CertifyRes>>(`${API_PREFIX}/users/verify_callback/?code=${code}`, {
     method: 'GET',
   })
     .then((res) => {

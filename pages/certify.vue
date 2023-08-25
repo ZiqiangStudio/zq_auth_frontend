@@ -12,7 +12,8 @@
         <Message />
       </template>
     </z-input>
-    <button>发送验证邮件</button>
+    <button type="submit">发送验证邮件</button>
+    <button class="skip" @click="confirmSkip">跳过</button>
   </form>
   <p class="action"><nuxt-link to="/register">无法访问武大邮箱？</nuxt-link></p>
 </template>
@@ -70,6 +71,13 @@ function submit(e: Event) {
       MMessage.error(err.data.msg);
     });
 }
+
+function confirmSkip(e: Event) {
+  e.preventDefault();
+  if (confirm('确定要跳过学生身份认证吗？')) {
+    router.push(`/login`);
+  }
+}
 </script>
 <style scoped lang="less">
 form {
@@ -79,7 +87,7 @@ form {
   gap: 12px;
 }
 
-form button {
+form button:first-of-type {
   margin-top: 20px;
 }
 
@@ -88,5 +96,11 @@ form button {
   text-align: center;
   font-size: 14px;
   margin-top: 10px;
+}
+
+.skip {
+  background-color: var(--color-button-secondary-bg);
+  color: var(--color-primary);
+  transition: color, background-color 0.3s;
 }
 </style>

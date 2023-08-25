@@ -49,6 +49,8 @@ function submit(e: Event) {
     .then((res) => {
       if (res.is_certified) {
         router.push(`/login?app-name=${appName}&app-logo=${appLogo}`);
+      } else {
+        MMessage.error('学生身份认证状态未更新，请确认已在邮箱中完成验证');
       }
     })
     .catch((err) => {

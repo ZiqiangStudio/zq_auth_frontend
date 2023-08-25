@@ -28,8 +28,6 @@ const studentId = ref('');
 
 const route = useRoute();
 const id = route.query.id?.toString() ?? '';
-const appName = route.query['app-name']?.toString() ?? '';
-const appLogo = route.query['app-logo']?.toString() ?? '';
 
 const router = useRouter();
 
@@ -66,7 +64,7 @@ function submit(e: Event) {
       });
     })
     .then(() => {
-      router.push(`/certify-pending?id=${id}&app-name=${appName}&app-logo=${appLogo}&student-id=${studentId.value}`);
+      router.push(`/certify-pending?id=${id}&student-id=${studentId.value}`);
     })
     .catch((err) => {
       MMessage.error(err.data.msg);

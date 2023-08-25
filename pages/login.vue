@@ -57,10 +57,10 @@ const password = ref('');
 
 const router = useRouter();
 const route = useRoute();
-const appName = ref(route.query['app-name']?.toString() ?? '');
-const appLogo = ref(route.query['app-logo']?.toString() ?? '');
+const appName = ref(route.query['app-name']?.toString() ?? sessionStorage.getItem('app-name') ?? '');
+const appLogo = ref(route.query['app-logo']?.toString() ?? sessionStorage.getItem('app-logo') ?? '');
 
-const isWxapp = route.query['wxapp']?.toString() === 'true';
+const isWxapp = route.query['wxapp']?.toString() === 'true' || sessionStorage.getItem('wxapp') === 'true';
 
 const isLoading = ref(false);
 
@@ -89,7 +89,7 @@ function getSsoCode() {
         /** A0311：用户未激活，邮箱认证未通过，需要重新校验 */
         if (err.data.code === 'A0311' && typeof loginRefCache.value?.id === 'number') {
           MMessage.error('登录需要验证学生身份，请重新验证');
-          router.push(`/certify?id=${loginRefCache.value.id}&app-name=${appName}&app-logo=${appLogo}`);
+          router.push(`/certify?id=${loginRefCache.value.id}`);
           return;
         }
       }
@@ -135,6 +135,13 @@ onMounted(() => {
     MMessage.error('参数错误无法正常登录，请退出页面重新进入');
     return;
   }
+  // 储存应用信息
+  if (sessionStorage.getItem('app-name') !== appName.value) {
+    sessionStorage.setItem('wxapp', isWxapp.toString());
+    sessionStorage.setItem('app-name', appName.value);
+    sessionStorage.setItem('app-logo', appLogo.value);
+  }
+  // 自动登录
   if (typeof localStorage.getItem('access') === 'string') {
     getSsoCode();
   }

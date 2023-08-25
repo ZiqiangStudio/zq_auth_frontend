@@ -18,8 +18,6 @@ import MMessage from 'vue-m-message';
 
 const route = useRoute();
 const code = route.query.code?.toString() ?? '';
-const appName = ref(route.query['app-name']?.toString() ?? '');
-const appLogo = ref(route.query['app-logo']?.toString() ?? '');
 
 const isSuccess = ref(false);
 const isLoading = ref(true);

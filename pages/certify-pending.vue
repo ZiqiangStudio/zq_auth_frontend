@@ -14,8 +14,6 @@ import MMessage from 'vue-m-message';
 
 const route = useRoute();
 const id = route.query.id?.toString() ?? '';
-const appName = route.query['app-name']?.toString() ?? '';
-const appLogo = route.query['app-logo']?.toString() ?? '';
 const studentId = ref(route.query['student-id']?.toString() ?? '');
 
 const image = isDark ? '/image/certify-pending-dark.svg' : '/image/certify-pending.svg';
@@ -48,7 +46,7 @@ function submit(e: Event) {
   })
     .then((res) => {
       if (res.is_certified) {
-        router.push(`/login?app-name=${appName}&app-logo=${appLogo}`);
+        router.replace(`/login`);
       } else {
         MMessage.error('学生身份认证状态未更新，请确认已在邮箱中完成验证');
       }

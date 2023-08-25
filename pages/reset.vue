@@ -1,5 +1,5 @@
 <template>
-  <page-back />
+  <page-back v-if="!isWxapp" />
   <div class="container">
     <page-header :image="image" title="忘记密码" notice="通过账号绑定的手机号找回密码" title-gap="30px" />
     <form @submit="submit">
@@ -80,6 +80,11 @@ import { ResBody } from '@/utils/types';
 const router = useRouter();
 
 const image = isDark ? '/image/reset-dark.svg' : '/image/reset.svg';
+
+const isWxapp = ref(false);
+onMounted(() => {
+  isWxapp.value = sessionStorage.getItem('wxapp') === 'true';
+});
 
 const phone = ref('');
 const sms = ref('');

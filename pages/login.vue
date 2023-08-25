@@ -102,7 +102,7 @@ function handleCertifyOnly() {
       });
       return;
     } else if (res) {
-      router.push(`/certify?id=${res.id}&app-name=${appName}&app-logo=${appLogo}`);
+      router.replace(`/certify?id=${res.id}`);
     }
   });
 }
@@ -190,7 +190,7 @@ function submit(e: Event) {
           });
           return;
         } else {
-          router.push(`/certify?id=${loginRefCache.value.id}`);
+          router.replace(`/certify?id=${loginRefCache.value.id}`);
           return;
         }
       }
@@ -206,7 +206,7 @@ function submit(e: Event) {
         /** A0311：用户未激活，邮箱认证未通过，需要重新校验 */
         if (err.data.code === 'A0311' && typeof loginRefCache.value?.id === 'number') {
           MMessage.error('登录需要验证学生身份，请重新验证');
-          router.push(`/certify?id=${loginRefCache.value.id}`);
+          router.replace(`/certify?id=${loginRefCache.value.id}`);
           return;
         }
       }

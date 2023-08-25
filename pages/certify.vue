@@ -1,5 +1,5 @@
 <template>
-  <page-back />
+  <page-back v-if="!isWxapp" />
   <page-header :image="image" title="验证学生身份" notice="我们会发送一封邮件到您的武大邮箱来验证您的学生身份" />
   <form @submit="submit">
     <z-input v-model="name" label="姓名" required placeholder="请输入姓名">
@@ -32,9 +32,11 @@ const id = route.query.id?.toString() ?? '';
 
 const router = useRouter();
 
+const isWxapp = ref(false);
 const isCertifyOnly = ref(false);
 
 onMounted(() => {
+  isWxapp.value = sessionStorage.getItem('wxapp') === 'true';
   isCertifyOnly.value = sessionStorage.getItem('certify-only') === 'true';
 });
 

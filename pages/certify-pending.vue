@@ -1,5 +1,5 @@
 <template>
-  <page-back />
+  <page-back v-if="!isWxapp" />
   <page-header :image="image" title="验证邮件已发送" :notice="`验证邮件已发送至${studentId}@whu.edu.cn`" />
   <form @submit="submit">
     <button>已在邮箱中完成验证</button>
@@ -17,8 +17,10 @@ const route = useRoute();
 const id = route.query.id?.toString() ?? '';
 const studentId = ref(route.query['student-id']?.toString() ?? '');
 
+const isWxapp = ref(false);
 let isCertifyOnly = false;
 onMounted(() => {
+  isWxapp.value = sessionStorage.getItem('wxapp') === 'true';
   isCertifyOnly = sessionStorage.getItem('certify-only') === 'true';
 });
 

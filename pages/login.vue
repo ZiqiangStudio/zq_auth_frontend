@@ -75,29 +75,6 @@ interface LoginRes {
 
 const loginRefCache = ref<LoginRes | null>(null);
 
-function getSsoCode() {
-  if (isLoading.value) return;
-  isLoading.value = true;
-
-  getSsoCodeRequest()
-    .then(() => {
-      isLoading.value = false;
-    })
-    .catch((err) => {
-      isLoading.value = false;
-      if ('data' in err && typeof err.data === 'object' && 'code' in err.data && typeof err.data.code === 'string') {
-        /** A0311：用户未激活，邮箱认证未通过，需要重新校验 */
-        if (err.data.code === 'A0311' && typeof loginRefCache.value?.id === 'number') {
-          MMessage.error('登录需要验证学生身份，请重新验证');
-          router.push(`/certify?id=${loginRefCache.value.id}`);
-          return;
-        }
-      }
-      console.error(err);
-      MMessage.error(err.data.msg);
-    });
-}
-
 function getSsoCodeRequest() {
   return request<ResBody<{ code: string }>>('https://api.cas.ziqiang.net.cn/sso/code/', {
     method: 'POST',
@@ -135,15 +112,27 @@ onMounted(() => {
     MMessage.error('参数错误无法正常登录，请退出页面重新进入');
     return;
   }
+
   // 储存应用信息
   if (sessionStorage.getItem('app-name') !== appName.value) {
     sessionStorage.setItem('wxapp', isWxapp.toString());
     sessionStorage.setItem('app-name', appName.value);
     sessionStorage.setItem('app-logo', appLogo.value);
   }
+
   // 自动登录
-  if (typeof localStorage.getItem('access') === 'string') {
-    getSsoCode();
+  if (typeof localStorage.getItem('access') === 'string' && !isLoading.value) {
+    isLoading.value = true;
+    getSsoCodeRequest()
+      .catch((err) => {
+        console.warn('自动登录失败', err);
+        localStorage.removeItem('access');
+        localStorage.removeItem('exp');
+        localStorage.removeItem('refresh');
+      })
+      .finally(() => {
+        isLoading.value = false;
+      });
   }
 });
 

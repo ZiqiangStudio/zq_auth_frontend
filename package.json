@@ -24,7 +24,6 @@
     "vite-svg-loader": "^4.0.0"
   },
   "dependencies": {
-    "copy-to-clipboard": "^3.3.3",
     "vue-m-message": "^4.0.2"
   }
 }

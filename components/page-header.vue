@@ -2,7 +2,7 @@
   <header>
     <app-header v-if="appLogo" :app-logo="appLogo" />
     <img v-if="image" :src="image" />
-    <h1 v-if="title" :style="{ marginTop: titleGap }">{{ title }}</h1>
+    <h1 v-if="title" :style="{ marginTop: image ? titleGap : '' }">{{ title }}</h1>
     <h1 v-else :style="{ marginTop: titleGap }">使用<strong>自强 Studio 账号</strong>登录</h1>
     <p class="notice">{{ notice }}</p>
   </header>

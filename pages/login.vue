@@ -112,6 +112,7 @@ onMounted(() => {
   appLogo.value = route.query['app-logo']?.toString() ?? sessionStorage.getItem('app-logo') ?? '';
   isWxapp = route.query['wxapp']?.toString() === 'true' || sessionStorage.getItem('wxapp') === 'true';
   isCertifyOnly = route.query['certify-only']?.toString() === 'true';
+  const manually = route.query.manually?.toString() === 'true';
 
   if (appName.value.length === 0) {
     MMessage.error('参数错误无法正常登录，请退出页面重新进入');
@@ -129,7 +130,7 @@ onMounted(() => {
   /**
    * 自动登录，当仅验证学生时，获取用户信息并返回
    */
-  if (typeof localStorage.getItem('access') === 'string' && !isLoading.value) {
+  if (!manually && typeof localStorage.getItem('access') === 'string' && !isLoading.value) {
     isLoading.value = true;
 
     if (isCertifyOnly) {

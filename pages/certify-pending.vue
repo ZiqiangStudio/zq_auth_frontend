@@ -7,7 +7,7 @@
       重新发送邮件{{ messageTimeout > 0 ? ` (${messageTimeout})` : '' }}
     </button>
   </form>
-  <p class="action"><nuxt-link to="/help">无法访问武大邮箱？</nuxt-link></p>
+  <p class="action"><nuxt-link to="/help">如何访问武大邮箱？</nuxt-link></p>
 </template>
 <script lang="ts" setup>
 import MMessage from 'vue-m-message';

@@ -15,7 +15,7 @@
     <button type="submit">发送验证邮件</button>
     <button :disabled="isCertifyOnly" class="skip" @click="confirmSkip">跳过</button>
   </form>
-  <p class="action"><nuxt-link to="/help">无法访问武大邮箱？</nuxt-link></p>
+  <p class="action"><nuxt-link to="/help">如何访问武大邮箱？</nuxt-link></p>
 </template>
 <script lang="ts" setup>
 import User from 'assets/icon/user.svg?component';

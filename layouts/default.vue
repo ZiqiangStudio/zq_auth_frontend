@@ -57,6 +57,11 @@
 :deep(h1) {
   white-space: nowrap;
   font-size: 28px;
+  font-weight: 600;
+}
+
+:deep(h2) {
+  font-size: 18px;
   font-weight: 500;
 }
 </style>

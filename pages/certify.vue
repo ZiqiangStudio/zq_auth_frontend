@@ -15,13 +15,12 @@
     <button type="submit">发送验证邮件</button>
     <button :disabled="isCertifyOnly" class="skip" @click="confirmSkip">跳过</button>
   </form>
-  <p class="action" @click="handleHelp"><a>无法访问武大邮箱？</a></p>
+  <p class="action"><nuxt-link to="/help">无法访问武大邮箱？</nuxt-link></p>
 </template>
 <script lang="ts" setup>
 import User from 'assets/icon/user.svg?component';
 import Message from 'assets/icon/message.svg?component';
 import MMessage from 'vue-m-message';
-import { WHU_MAIL } from '@/constants/url';
 
 const image = isDark ? '/image/certify-dark.svg' : '/image/certify.svg';
 
@@ -85,12 +84,6 @@ function confirmSkip(e: Event) {
   e.preventDefault();
   if (confirm('确定要跳过学生身份认证吗？')) {
     router.push(`/login`);
-  }
-}
-
-function handleHelp() {
-  if (confirm('即将打开武汉大学邮箱。新生邮箱一般用户名为学号，密码为身份证后六位')) {
-    window.open(WHU_MAIL);
   }
 }
 </script>

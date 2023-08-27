@@ -24,6 +24,7 @@
     "vite-svg-loader": "^4.0.0"
   },
   "dependencies": {
+    "query-string": "^8.1.0",
     "vue-m-message": "^4.0.2"
   }
 }

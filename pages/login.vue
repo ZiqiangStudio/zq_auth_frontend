@@ -65,7 +65,7 @@ const appLogo = ref('');
 
 let isWxapp = false;
 let isCertifyOnly = false;
-let redirectUrl = '';
+let responseType = '';
 
 const isLoading = ref(false);
 
@@ -88,7 +88,7 @@ function getSsoCodeRequest() {
     },
   }).then((res) => {
     callback({
-      code: res.code,
+      [responseType]: res.code,
     });
   });
 }
@@ -113,7 +113,9 @@ onMounted(() => {
   appLogo.value = route.query['app-logo']?.toString() ?? sessionStorage.getItem('app-logo') ?? '';
   isWxapp = route.query['wxapp']?.toString() === 'true' || sessionStorage.getItem('wxapp') === 'true';
   isCertifyOnly = route.query['certify-only']?.toString() === 'true';
-  redirectUrl = route.query['redirect-url']?.toString() ?? sessionStorage.getItem('redirect-url') ?? ''
+  const redirectUri = route.query['redirect-uri']?.toString() ?? sessionStorage.getItem('redirect-uri') ?? '';
+  responseType = route.query['response-type']?.toString() ?? sessionStorage.getItem('response-type') ?? 'code';
+  const state = route.query['state']?.toString() ?? sessionStorage.getItem('state') ?? '';
   const manually = route.query.manually?.toString() === 'true';
 
   if (appName.value.length === 0) {
@@ -127,7 +129,9 @@ onMounted(() => {
     sessionStorage.setItem('app-name', appName.value);
     sessionStorage.setItem('app-logo', appLogo.value);
     sessionStorage.setItem('certify-only', isCertifyOnly.toString());
-    sessionStorage.setItem('redirect-url', redirectUrl)
+    sessionStorage.setItem('redirect-url', redirectUri);
+    sessionStorage.setItem('response-type', responseType);
+    sessionStorage.setItem('state', state);
   }
 
   /**

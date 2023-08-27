@@ -65,6 +65,7 @@ const appLogo = ref('');
 
 let isWxapp = false;
 let isCertifyOnly = false;
+let redirectUrl = '';
 
 const isLoading = ref(false);
 
@@ -112,6 +113,7 @@ onMounted(() => {
   appLogo.value = route.query['app-logo']?.toString() ?? sessionStorage.getItem('app-logo') ?? '';
   isWxapp = route.query['wxapp']?.toString() === 'true' || sessionStorage.getItem('wxapp') === 'true';
   isCertifyOnly = route.query['certify-only']?.toString() === 'true';
+  redirectUrl = route.query['redirect-url']?.toString() ?? sessionStorage.getItem('redirect-url') ?? ''
   const manually = route.query.manually?.toString() === 'true';
 
   if (appName.value.length === 0) {
@@ -125,6 +127,7 @@ onMounted(() => {
     sessionStorage.setItem('app-name', appName.value);
     sessionStorage.setItem('app-logo', appLogo.value);
     sessionStorage.setItem('certify-only', isCertifyOnly.toString());
+    sessionStorage.setItem('redirect-url', redirectUrl)
   }
 
   /**

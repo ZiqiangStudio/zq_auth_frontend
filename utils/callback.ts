@@ -6,8 +6,13 @@ export function callback(data: unknown) {
   const isWxapp = route.query['wxapp']?.toString() === 'true' || sessionStorage.getItem('wxapp') === 'true';
 
   if (process.client && window.opener) {
-    window.opener.postMessage(data, '*');
-    window.close();
+    const url = getRedirectUrl()
+    if (url) {
+      handleWithUrl(url, data as any)
+    } else {
+      window.opener.postMessage(data, '*');
+      window.close();
+    }
   } else if (isWxapp) {
     wx.miniProgram.postMessage({
       data,
@@ -16,5 +21,24 @@ export function callback(data: unknown) {
     wx.miniProgram.navigateBack();
   } else {
     MMessage.error('无法回到应用中，请退出页面重新进入');
+  }
+}
+
+function getRedirectUrl(): URL | null {
+  const url = sessionStorage.getItem('redirect-url') ?? '';
+  try {
+    return new URL(decodeURIComponent(url))
+  } catch {
+    return null
+  }
+}
+
+function handleWithUrl(url: URL, extend: any) {
+  if (!extend || !extend['code']) {
+    return
+  }
+
+  if (extend['is_certified']) {
+    window.location.href = url.toString() + extend['code']
   }
 }

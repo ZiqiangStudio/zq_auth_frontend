@@ -1,8 +1,14 @@
-# Nuxt 3 Minimal Starter
+# 自强统一认证服务前端
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## 相关文档
 
-## Setup
+接入文档：[自强Auth文档](https://docs.cas.ziqiang.net.cn/)
+
+## 开发指南
+
+TODO
+
+### Setup
 
 Make sure to install the dependencies:
 
@@ -17,7 +23,7 @@ npm install
 pnpm install
 ```
 
-## Development Server
+### Development Server
 
 Start the development server on `http://localhost:3000`
 
@@ -25,7 +31,7 @@ Start the development server on `http://localhost:3000`
 npm run dev
 ```
 
-## Production
+### Production
 
 Build the application for production:
 

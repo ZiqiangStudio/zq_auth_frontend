@@ -36,10 +36,10 @@ function onChange() {
 }
 </script>
 
-<style>
+<style scoped lang="less">
 #radio {
   display: flex;
-  gap: 20px;
+  gap: 8px;
   align-items: center;
   * {
     margin: 0;

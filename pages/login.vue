@@ -34,6 +34,12 @@
           <nuxt-link to="/reset">忘记密码？</nuxt-link>
         </template>
       </z-input>
+      <z-checkbox id="auto-login" v-model="isAutoLogin" label="自动登录">
+        <template #active>
+          <z-radio v-model="expireTimeLocal" label="7天" :value="7" />
+          <z-radio v-model="expireTimeLocal" label="14天" :value="14" />
+        </template>
+      </z-checkbox>
       <button type="submit">
         <z-loading v-if="isLoading" />
         登录<template v-if="isLoading">中...</template>
@@ -57,6 +63,8 @@ import { API_PREFIX } from '@/utils/request';
 
 const username = ref('');
 const password = ref('');
+const isAutoLogin = ref(false);
+const expireTimeLocal = ref(7); // 以天为单位
 
 const router = useRouter();
 const route = useRoute();
@@ -137,7 +145,13 @@ onMounted(() => {
   /**
    * 自动登录，当仅验证学生时，获取用户信息并返回
    */
-  if (!manually && typeof localStorage.getItem('access') === 'string' && !isLoading.value) {
+  if (
+    !manually &&
+    isAutoLogin &&
+    typeof localStorage.getItem('access') === 'string' &&
+    Date.parse(localStorage.getItem('exp-local') ?? Date()) > Date.now() &&
+    !isLoading.value
+  ) {
     isLoading.value = true;
 
     if (isCertifyOnly) {
@@ -146,6 +160,7 @@ onMounted(() => {
           console.warn('自动登录失败', err);
           localStorage.removeItem('access');
           localStorage.removeItem('exp');
+          localStorage.removeItem('exp-local');
           localStorage.removeItem('refresh');
         })
         .finally(() => {
@@ -157,6 +172,7 @@ onMounted(() => {
           console.warn('自动登录失败', err);
           localStorage.removeItem('access');
           localStorage.removeItem('exp');
+          localStorage.removeItem('exp-local');
           localStorage.removeItem('refresh');
         })
         .finally(() => {
@@ -190,6 +206,7 @@ function submit(e: Event) {
       localStorage.setItem('access', res.data.access);
       localStorage.setItem('exp', res.data.expire_time);
       localStorage.setItem('refresh', res.data.refresh);
+      localStorage.setItem('exp-local', new Date(Date.now() + expireTimeLocal.value * 24 * 60 * 60 * 1000).toString());
 
       if (isCertifyOnly) {
         if (res.data.is_certified) {

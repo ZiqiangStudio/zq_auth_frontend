@@ -96,7 +96,9 @@ form {
 .resend {
   background-color: var(--color-button-secondary-bg);
   color: var(--color-primary);
-  transition: color, background-color 0.3s;
+  transition:
+    color,
+    background-color 0.3s;
 
   &[disabled] {
     color: var(--color-disabled);

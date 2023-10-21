@@ -86,7 +86,8 @@
       </z-input>
       <button type="submit" class="submit">
         <z-loading v-if="isLoading" />
-        注册<template v-if="isLoading">中...</template>
+        注册
+        <template v-if="isLoading">中...</template>
       </button>
     </form>
     <p class="action">
@@ -245,7 +246,9 @@ form .submit {
   width: auto;
   white-space: nowrap;
   width: 45%;
-  transition: color, background-color 0.3s;
+  transition:
+    color,
+    background-color 0.3s;
 
   &[disabled] {
     color: var(--color-disabled);

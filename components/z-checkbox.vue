@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts" setup>
-const props = defineProps({
+defineProps({
   label: {
     type: String,
     required: true,

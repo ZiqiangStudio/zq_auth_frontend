@@ -184,7 +184,9 @@ form .submit {
   width: auto;
   white-space: nowrap;
   width: 45%;
-  transition: color, background-color 0.3s;
+  transition:
+    color,
+    background-color 0.3s;
 
   &[disabled] {
     color: var(--color-disabled);

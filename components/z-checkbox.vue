@@ -44,5 +44,26 @@ watch(selected, (value) => {
   * {
     margin: 0;
   }
+
+  input {
+    appearance: none;
+    height: 20px;
+    width: 20px;
+    border: 2px solid var(--color-primary);
+    border-radius: 5px;
+    &:checked {
+      background-color: var(--color-primary);
+      &::after {
+        display: block;
+        height: 13px;
+        width: 13px;
+        box-sizing: border-box;
+        border: 2px solid var(--color-bg);
+        content: ' ';
+        transform: translate(1px, -2px) rotate(50deg);
+        clip-path: polygon(100% 20%, 60% 20%, 60% 100%, 100% 100%);
+      }
+    }
+  }
 }
 </style>

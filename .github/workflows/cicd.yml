@@ -40,7 +40,7 @@ jobs:
       
       - name: Upload files to OSS
         run: |
-          ossutil rm -f oss://zq-auth-v2/ -r
+          ossutil rm -f oss://zq-auth-v2/ -r --exclude "*.txt"
           ossutil cp -rf dist oss://zq-auth-v2/
           ossutil set-meta oss://zq-auth-v2/ Cache-Control:no-cache --include "*.html" -r
 

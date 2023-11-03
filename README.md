@@ -8,7 +8,7 @@
 
 TODO
 
-### Setup
+### 安装
 
 Make sure to install the dependencies:
 

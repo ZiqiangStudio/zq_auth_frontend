@@ -1,6 +1,7 @@
 {
   "name": "nuxt-app",
   "private": true,
+  "version": "1.0.0",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -28,6 +29,5 @@
   "dependencies": {
     "query-string": "^8.1.0",
     "vue-m-message": "^4.0.2"
-  },
-  "version": null
+  }
 }

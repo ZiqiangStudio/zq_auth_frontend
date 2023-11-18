@@ -23,7 +23,7 @@ npm install
 pnpm install
 ```
 
-### Development Server
+### 本地启动
 
 Start the development server on `http://localhost:3000`
 

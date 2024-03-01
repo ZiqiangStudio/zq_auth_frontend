@@ -15,7 +15,7 @@
 </template>
 <script lang="ts" setup>
 import MMessage from 'vue-m-message';
-import { ResBody } from '@/utils/types';
+import { type ResBody } from '@/utils/types';
 import { API_PREFIX } from '@/utils/request';
 
 const route = useRoute();

@@ -105,7 +105,7 @@ import Message from 'assets/icon/message.svg?component';
 import User from 'assets/icon/user.svg?component';
 import Phone from 'assets/icon/phone.svg?component';
 import MMessage from 'vue-m-message';
-import { ResBody } from '@/utils/types';
+import { type ResBody } from '@/utils/types';
 import { API_PREFIX } from '@/utils/request';
 
 const route = useRoute();

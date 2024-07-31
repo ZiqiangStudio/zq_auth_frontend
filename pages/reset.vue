@@ -75,7 +75,7 @@ import Message from 'assets/icon/message.svg?component';
 import Phone from 'assets/icon/phone.svg?component';
 import MMessage from 'vue-m-message';
 import { API_PREFIX } from '@/utils/request';
-import { ResBody } from '@/utils/types';
+import { type ResBody } from '@/utils/types';
 
 const router = useRouter();
 

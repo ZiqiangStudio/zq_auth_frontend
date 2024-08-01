@@ -36,7 +36,7 @@ jobs:
         run: pnpm generate
 
       - name: Setup aliyun OSS
-        uses: yizhoumo/setup-ossutil@v3
+        uses: yizhoumo/setup-ossutil@v2
         with:
           endpoint: oss-cn-hangzhou.aliyuncs.com
           access-key-id: ${{ secrets.ALI_KEY_ID }}

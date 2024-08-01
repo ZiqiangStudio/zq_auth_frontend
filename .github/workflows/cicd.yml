@@ -6,48 +6,57 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  lint: 
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 9.5.0
           run_install: false
-
       - name: Use Node.js 22
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'pnpm'
-
       - name: Install dependencies
         run: pnpm install
-
       - name: Code lint
         run: pnpm lint
-
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.5.0
+          run_install: false
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install
       - name: Build (Generate static files)
         run: pnpm generate
-
       - name: Setup aliyun OSS
         uses: yizhoumo/setup-ossutil@v2
         with:
           endpoint: oss-cn-hangzhou.aliyuncs.com
           access-key-id: ${{ secrets.ALI_KEY_ID }}
           access-key-secret: ${{ secrets.ALI_KEY_SECRET }}
-      
       - name: Upload files to OSS
         run: |
           ossutil rm -f oss://zq-auth-v2/ -r --exclude "*.txt"
           ossutil cp -rf dist oss://zq-auth-v2/
           ossutil set-meta oss://zq-auth-v2/ Cache-Control:no-cache --include "*.html" -r
-
       - name: Refresh CDN
         uses: visionwx/ali-cdn-refresh@v0.1.1
         with:

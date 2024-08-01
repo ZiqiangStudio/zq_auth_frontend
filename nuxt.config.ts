@@ -28,7 +28,7 @@ export default defineNuxtConfig({
       },
     },
     prerender: {
-      routes: ['/login', '/certify', 'certify-pending', 'certify-success', 'register', 'reset'],
+      routes: ['/login', '/certify', '/certify-pending', '/certify-success', '/register', '/reset'],
     },
   },
   typescript: {

@@ -35,7 +35,7 @@
       </z-input>
       <z-input
         v-model="sms"
-        label="验证码"
+        label="验证码（若无法接收验证码，请入招新群973508852处理）"
         minlength="6"
         maxlength="6"
         type="number"

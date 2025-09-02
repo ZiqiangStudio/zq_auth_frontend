@@ -1,6 +1,6 @@
 <template>
   <page-back v-if="!isWxapp" />
-  <page-header :image="image" title="验证邮件已发送" :notice="`验证邮件已发送至${studentId}@whu.edu.cn`" />
+  <page-header :image="image" title="验证邮件已发送" :notice="getNoticeText" />
   <form @submit="submit">
     <button>已在邮箱中完成验证</button>
     <button class="resend" :disabled="messageTimeout > 0" @click="resend">
@@ -16,6 +16,7 @@ import { callback } from '@/utils/callback';
 const route = useRoute();
 const id = route.query.id?.toString() ?? '';
 const studentId = ref(route.query['student-id']?.toString() ?? '');
+const email = ref(route.query.email?.toString() ?? '');
 
 const isWxapp = ref(false);
 let isCertifyOnly = false;
@@ -25,6 +26,14 @@ onMounted(() => {
 });
 
 const image = isDark ? '/image/certify-pending-dark.svg' : '/image/certify-pending.svg';
+
+const getNoticeText = computed(() => {
+  if (email.value) {
+    return `验证邮件已发送至${email.value}`;
+  } else {
+    return `验证邮件已发送至${studentId.value}@whu.edu.cn`;
+  }
+});
 
 const messageTimeout = ref(0);
 function resetTimeout() {
@@ -78,11 +87,24 @@ interface SendRes {
 
 function resend(e: Event) {
   e.preventDefault();
-  request<SendRes>(`/users/${id}/certify/`, {
-    method: 'POST',
-  }).then(() => {
-    resetTimeout();
-  });
+  if (email.value) {
+    // 使用其他邮箱进行验证
+    request<SendRes>(`/users/${id}/certify_email/`, {
+      method: 'POST',
+      body: {
+        email_addr: email.value
+      }
+    }).then(() => {
+      resetTimeout();
+    });
+  } else {
+    // 使用武大邮箱进行验证
+    request<SendRes>(`/users/${id}/certify/`, {
+      method: 'POST',
+    }).then(() => {
+      resetTimeout();
+    });
+  }
 }
 </script>
 <style scoped lang="less">

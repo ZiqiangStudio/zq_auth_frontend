@@ -19,6 +19,7 @@ export default defineNuxtConfig({
       ],
     },
   },
+
   nitro: {
     devProxy: {
       '/api': {
@@ -31,10 +32,14 @@ export default defineNuxtConfig({
       routes: ['/login', '/certify', '/certify-pending', '/certify-success', '/register', '/reset'],
     },
   },
+
   typescript: {
     strict: true,
   },
+
   vite: {
     plugins: [svgLoader()],
   },
+
+  compatibilityDate: '2025-09-02',
 });

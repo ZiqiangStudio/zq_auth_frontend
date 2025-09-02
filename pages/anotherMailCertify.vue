@@ -1,22 +1,20 @@
 <template>
   <page-back v-if="!isWxapp" />
-  <page-header :image="image" title="验证学生身份" notice="我们会发送一封邮件到您的武大邮箱来验证您的学生身份" />
+  <page-header :image="image" title="使用其他邮箱验证" notice="请输入您的姓名和常用邮箱，我们将发送验证邮件" />
   <form @submit="submit">
     <z-input v-model="name" label="姓名" required placeholder="请输入姓名">
       <template #prefix>
         <User />
       </template>
     </z-input>
-    <z-input v-model="studentId" label="学号" required placeholder="请输入学号">
+    <z-input v-model="email" label="邮箱" required placeholder="请输入您的邮箱" type="email">
       <template #prefix>
         <Message />
       </template>
     </z-input>
-    <button id="另外邮箱验证" type="button" @click="goToAnotherMailCertify">采用其余邮箱验证</button>
     <button type="submit">发送验证邮件</button>
-    <button :disabled="isCertifyOnly" class="skip" @click="confirmSkip">跳过</button>
+    <button class="skip" @click="backToCertify">返回</button>
   </form>
-  <p class="action"><nuxt-link to="/help">如何访问武大邮箱？</nuxt-link></p>
 </template>
 <script lang="ts" setup>
 import User from 'assets/icon/user.svg?component';
@@ -26,7 +24,7 @@ import MMessage from 'vue-m-message';
 const image = isDark ? '/image/certify-dark.svg' : '/image/certify.svg';
 
 const name = ref('');
-const studentId = ref('');
+const email = ref('');
 
 const route = useRoute();
 const id = route.query.id?.toString() ?? '';
@@ -34,11 +32,9 @@ const id = route.query.id?.toString() ?? '';
 const router = useRouter();
 
 const isWxapp = ref(false);
-const isCertifyOnly = ref(false);
 
 onMounted(() => {
   isWxapp.value = sessionStorage.getItem('wxapp') === 'true';
-  isCertifyOnly.value = sessionStorage.getItem('certify-only') === 'true';
 });
 
 interface ChangeRes {
@@ -65,31 +61,27 @@ function submit(e: Event) {
     method: 'PATCH',
     body: {
       name: name.value,
-      student_id: studentId.value,
     },
   })
     .then(() => {
-      return request<SendRes>(`/users/${id}/certify/`, {
+      return request<SendRes>(`/users/${id}/certify_email/`, {
         method: 'POST',
+        body: {
+          email_addr: email.value
+        }
       });
     })
     .then(() => {
-      router.push(`/certify-pending?id=${id}&student-id=${studentId.value}`);
+      router.push(`/certify-pending?id=${id}&email=${encodeURIComponent(email.value)}`);
     })
     .catch((err) => {
       MMessage.error(err.data.msg);
     });
 }
 
-function confirmSkip(e: Event) {
+function backToCertify(e: Event) {
   e.preventDefault();
-  if (confirm('确定要跳过学生身份认证吗？')) {
-    router.push(`/login`);
-  }
-}
-
-function goToAnotherMailCertify() {
-  router.push(`/anotherMailCertify?id=${id}`);
+  router.push(`/certify?id=${id}`);
 }
 </script>
 <style scoped lang="less">
